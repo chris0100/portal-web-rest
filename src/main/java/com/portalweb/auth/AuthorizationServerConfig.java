@@ -32,6 +32,7 @@ public class AuthorizationServerConfig  extends AuthorizationServerConfigurerAda
     private InfoAdicionalToken infoAdicionalTokenObj;
 
 
+    //Revision de autenticacion en configuracion
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
         security.tokenKeyAccess("permitAll()")
@@ -39,6 +40,7 @@ public class AuthorizationServerConfig  extends AuthorizationServerConfigurerAda
     }
 
 
+    //Datos de revision enviados desde cliente.
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory().withClient("angularapp")
@@ -49,6 +51,8 @@ public class AuthorizationServerConfig  extends AuthorizationServerConfigurerAda
                 .refreshTokenValiditySeconds(3600);
     }
 
+
+    //Configuracion de token con informacion adicional.
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
@@ -61,6 +65,8 @@ public class AuthorizationServerConfig  extends AuthorizationServerConfigurerAda
                 .tokenEnhancer(tokenEnhancerChain);
     }
 
+
+    //BEANS - para implementar en otros metodos.
     @Bean
     public JwtTokenStore tokenStore(){
         return new JwtTokenStore(accessTokenConverter());

@@ -35,7 +35,7 @@ public class UsuarioService implements UsuarioServices,UserDetailsService {
 
 
         //Se carga la lista de roles.
-        List<GrantedAuthority> authorities = usuario.getListaRoles()
+        List<GrantedAuthority> authorities = usuario.getRoles()
                 .stream()
                 .map(role -> new SimpleGrantedAuthority(role.getNombre()))
                 .peek(authority -> System.out.println("role: " + authority.getAuthority()))

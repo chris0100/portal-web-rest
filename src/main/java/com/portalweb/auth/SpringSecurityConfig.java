@@ -21,7 +21,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
 
-    //Registrar metodo para reutilizar luego
+    //BEANS - Registrar metodos para reutilizar luego
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

@@ -2,7 +2,6 @@ package com.portalweb.auth;
 
 public class JwtConfig {
 
-    public static final String LLAVE_SECRETA = "alguna.clave.secreta.12345678";
 
     public static final  String RSA_PRIVADA = "-----BEGIN RSA PRIVATE KEY-----\n" +
             "MIIEpAIBAAKCAQEAorEXcVRhpRwNlVmEEgbt1rdp2TeSB2eJu/7xtqqsEAFWgwNq\n" +

@@ -21,10 +21,11 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
 
 
+    //Paginas de visita libres
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers(HttpMethod.GET,"/api/clientes", "/api/clientes/page/**", "/api/uploads/img/**", "/img/**")
+                .antMatchers(HttpMethod.GET,"/obtener-listado", "/api/clientes/page/**", "/api/uploads/img/**", "/img/**")
                 .permitAll()
                 /*.antMatchers(HttpMethod.GET, "/api/clientes/{id}").hasAnyRole("USER","ADMIN")
                 .antMatchers(HttpMethod.POST, "/api/clientes/upload").hasAnyRole("USER","ADMIN")
@@ -37,6 +38,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
 
 
+    //Creacion de BEANS para utilizar en otros metodos.
     @Bean
     public CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration configuration = new CorsConfiguration();

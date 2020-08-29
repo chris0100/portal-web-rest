@@ -1,12 +1,14 @@
 package com.portalweb.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Table(name="usuarios")
+@Table(name="t001_usuarios")
 public class Usuario implements Serializable {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,33 +17,37 @@ public class Usuario implements Serializable {
     @Column(unique = true, length = 20)
     private String username;
 
-    @Column(length = 60)
+    @Column(length = 120)
     private String password;
 
     private Boolean enabled;
 
+    @Column(length = 100)
     private String nombre;
 
+    @Column(length = 100)
     private String apellido;
 
+    @Column(length = 50, unique = true)
+    @Email
     private String email;
 
     //Cada vez que se elimina un usuario, se elimina su rol
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "usuarios_roles", joinColumns = @JoinColumn(name = "usuario_id"),
-                inverseJoinColumns = @JoinColumn(name = "role_id"),
-                uniqueConstraints = {@UniqueConstraint(columnNames = {"usuario_id", "role_id"})})
-    private List<Role> listaRoles;
+    @JoinTable(name = "usuarios_roles", joinColumns = @JoinColumn(name = "id_usuario"),
+                inverseJoinColumns = @JoinColumn(name = "id_role"),
+                uniqueConstraints = {@UniqueConstraint(columnNames = {"id_usuario", "id_role"})})
+    private List<Role> roles;
 
 
 
     //GETTERS AND SETTERS
-    public List<Role> getListaRoles() {
-        return listaRoles;
+    public List<Role> getRoles() {
+        return roles;
     }
 
-    public void setListaRoles(List<Role> listaRoles) {
-        this.listaRoles = listaRoles;
+    public void setRoles(List<Role> listaRoles) {
+        this.roles = listaRoles;
     }
 
     public Long getId() {

@@ -16,8 +16,11 @@ import java.util.Map;
 @Component
 public class InfoAdicionalToken implements TokenEnhancer {
 
+
     @Autowired
     private UsuarioServices usuarioServicesObj;
+
+
 
     @Override
     public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
@@ -31,8 +34,6 @@ public class InfoAdicionalToken implements TokenEnhancer {
         ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(info);
         return accessToken;
     }
-
-
 
 
 
