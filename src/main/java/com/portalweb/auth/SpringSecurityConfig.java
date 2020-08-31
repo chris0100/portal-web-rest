@@ -20,7 +20,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsService usuarioService;
 
 
-
     //BEANS - Registrar metodos para reutilizar luego
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -28,14 +27,13 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 
-
     @Override
     @Autowired
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(this.usuarioService)
+        auth
+                .userDetailsService(this.usuarioService)
                 .passwordEncoder(passwordEncoder());
     }
-
 
 
     @Bean("authenticationManager")
@@ -43,7 +41,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     protected AuthenticationManager authenticationManager() throws Exception {
         return super.authenticationManager();
     }
-
 
 
     @Override

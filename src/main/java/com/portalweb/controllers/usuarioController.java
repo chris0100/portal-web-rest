@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,9 +26,13 @@ public class usuarioController {
     @Autowired
     private UsuarioService usuarioServiceObj;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
     String connectionUrl = "jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=BD_PortalWeb_2;user=sa;password=3K4$.2015$#";
 
 
+    // Obtiene la sucursal a traves del nit
     @GetMapping("/obtener-sucursal/{nitCliente}")
     public ResponseEntity<?> obtenerSucursal(@PathVariable String nitCliente) throws SQLException {
         List<String> listadoSucursal = new ArrayList<>();
@@ -57,6 +62,7 @@ public class usuarioController {
     }
 
 
+    //Permite obtener el punto de envio con el nit y la sucursal
     @GetMapping("/obtener-punto-envio/{nitCliente}/{sucursal}")
     public ResponseEntity<?> obtenerPuntoEnvio(@PathVariable String nitCliente, @PathVariable String sucursal) throws SQLException {
         List<String> listadoPuntoEnvio = new ArrayList<>();
@@ -83,6 +89,7 @@ public class usuarioController {
     }
 
 
+    // Valida si la entidad dinamica esta habilitada
     @GetMapping("/validar-entidad-dinamica/{nitCliente}/{sucursal}")
     public ResponseEntity<?> validarEntidadDinamica(@PathVariable String nitCliente, @PathVariable String sucursal) throws SQLException {
 
@@ -117,8 +124,6 @@ public class usuarioController {
     }
 
 
-
-
     //Actualizar datos de configuracion del usuario logueado
     @PutMapping("/update-cliente/{id}")
     @ResponseStatus(HttpStatus.CREATED)
@@ -131,7 +136,7 @@ public class usuarioController {
         Map<String, Object> response = new HashMap<>();
 
         // Si existen errores
-        if (result.hasErrors()){
+        if (result.hasErrors()) {
             List<String> errors = result.getFieldErrors()
                     .stream()
                     .map(err -> "El campo " + err.getField() + " " + err.getDefaultMessage())
@@ -141,21 +146,21 @@ public class usuarioController {
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
         }
 
+
         //Si el usuario que se quiere editar no existe en la BD
-        if (usuarioActual == null){
+        if (usuarioActual == null) {
             response.put("mensaje", "Error: No se puede editar");
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
         }
 
 
         //Se pasan los dos datos que se quieren editar
-        try{
-            usuarioActual.setNombre(usuario.getNombre());
-            usuarioActual.setEmail(usuario.getEmail());
+        try {
+            usuarioActual.setNombre(usuario.getNombre().trim());
+            usuarioActual.setEmail(usuario.getEmail().trim());
 
             usuarioUpdated = usuarioServiceObj.save(usuarioActual);
-        }
-        catch(DataAccessException de){
+        } catch (DataAccessException de) {
             response.put("mensaje", "Error al actualizar el usuario en la Base de Datos");
             response.put("error", "Error critico de almacenamiento");
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -169,7 +174,68 @@ public class usuarioController {
     }
 
 
+    //Modifica la contraseña del usuario
+    @PutMapping("/update-pass-cliente/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> modificarPassword(@Valid @RequestBody String[] pass, BindingResult result,
+                                               @PathVariable Long id) {
 
+        //Localiza al usuario
+        Usuario usuario = usuarioServiceObj.findById(id);
+
+        Usuario usuarioUpdated = null;
+
+        Map<String, Object> response = new HashMap<>();
+
+
+        // Si existen errores
+        if (result.hasErrors()) {
+            List<String> errors = result.getFieldErrors()
+                    .stream()
+                    .map(err -> "El campo " + err.getField() + " " + err.getDefaultMessage())
+                    .collect(Collectors.toList());
+
+            response.put("errors", errors);
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+        }
+
+
+        //Si el usuario que se quiere editar no existe en la BD
+        if (usuario == null) {
+            response.put("mensaje", "Error: No se puede editar");
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+        }
+
+
+        //pass[0] = actual ; pass[1] = nuevo
+        //Revisa que el password actual coincida con el de la BD
+        if (passwordEncoder.matches(pass[0].trim(), usuario.getPassword().trim())) {
+
+            try {
+                //Se encripta el nuevo password
+                String nuevaPasswordEnc = passwordEncoder.encode(pass[1].trim());
+                System.out.println();
+                usuario.setPassword(nuevaPasswordEnc);
+                usuarioUpdated = usuarioServiceObj.save(usuario);
+
+            } catch (DataAccessException de) {
+                response.put("mensaje", "Error al actualizar la contraseña en la Base de Datos");
+                response.put("error", "Error critico de almacenamiento");
+                return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+            //Si se crea correctamente el usuario envia mensaje satisfactorio.
+            response.put("mensaje", "La contraseña ha sido actualizada con exito");
+            response.put("usuario", usuarioUpdated);
+
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
+
+        } else {
+            response.put("mensaje", "La contraseña actual no es correcta");
+            response.put("error", "Error de contraseña");
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+        }
+    }
 
 
 }
