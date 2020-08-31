@@ -4,23 +4,24 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "t002_roles")
+@Table(name = "t002_rol")
 public class Role implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "id_rol")
+    private String id;
 
     @Column(unique = true, length = 30)
     private String nombre;
 
 
     //GETTERS AND SETTERS
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
