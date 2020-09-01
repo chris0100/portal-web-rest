@@ -261,6 +261,8 @@ public class usuarioController {
 
         Usuario usuarioNuevo = null;
 
+        System.out.println(usuario.getRolesPrincipal()[0] + " : " + usuario.getRolesPrincipal().length);
+
         Map<String, Object> response = new HashMap<>();
 
         // Se revisan si hay errores
@@ -280,14 +282,18 @@ public class usuarioController {
         //Setear las condiciones y restricciones
         usuario.setCondicionesRestricciones(true);
 
+
+        //Se debe encriptar la contraseña, buscar los respectivos roles en bd para asociar
+
+
+
         //Se cargan la lista de roles para el usuario
-        List<Role> listaRol = new ArrayList<>();
+/*        List<Role> listaRol = new ArrayList<>();
         Role role = new Role();
         role.setId("SER");
         role.setNombre("servicio al cliente");
         listaRol.add(0, role);
-        usuario.setRoles(listaRol);
-
+        usuario.setRoles(listaRol);*/
 
 
         try {

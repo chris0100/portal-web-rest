@@ -3,7 +3,6 @@ package com.portalweb.models;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -76,12 +75,25 @@ public class Usuario implements Serializable {
     private List<Role> roles;
 
 
+    @Transient
+    private String[] rolesPrincipal;
+
+
 
 
 
     //****************************************
     //GETTERS AND SETTERS
     //****************************************
+
+    public String[] getRolesPrincipal() {
+        return rolesPrincipal;
+    }
+
+    public void setRolesPrincipal(String[] rolesPrincipal) {
+        this.rolesPrincipal = rolesPrincipal;
+    }
+
     public String getNit() {
         return nit;
     }
