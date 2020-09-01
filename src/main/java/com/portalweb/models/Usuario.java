@@ -61,18 +61,18 @@ public class Usuario implements Serializable {
     @Column(name = "id_punto_envio")
     private String idPuntoEnvio;
 
-/*
+
     @Column(name = "condiciones_restricciones")
     private boolean condicionesRestricciones;
-*/
+
 
 
 
     //Cada vez que se elimina un usuario, se elimina su rol
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "usuario_has_roles", joinColumns = @JoinColumn(name = "id_usuario"),
-                inverseJoinColumns = @JoinColumn(name = "id_rol"),
-                uniqueConstraints = {@UniqueConstraint(columnNames = {"id_usuario", "id_rol"})})
+    @JoinTable(name = "usuario_has_roles", joinColumns = {
+            @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")}, inverseJoinColumns = {
+            @JoinColumn(name = "id_rol", referencedColumnName = "id_rol")})
+    @ManyToMany
     private List<Role> roles;
 
 
@@ -170,13 +170,13 @@ public class Usuario implements Serializable {
         this.idPuntoEnvio = idPuntoEnvio;
     }
 
-/*    public boolean isCondicionesRestricciones() {
+   public boolean isCondicionesRestricciones() {
         return condicionesRestricciones;
     }
 
     public void setCondicionesRestricciones(boolean condicionesRestricciones) {
         this.condicionesRestricciones = condicionesRestricciones;
-    }*/
+    }
 
     public List<Role> getRoles() {
         return roles;

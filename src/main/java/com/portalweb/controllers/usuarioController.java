@@ -1,5 +1,6 @@
 package com.portalweb.controllers;
 
+import com.portalweb.models.Role;
 import com.portalweb.models.Usuario;
 import com.portalweb.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,8 @@ public class usuarioController {
     String connectionUrl = "jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=BD_PortalWeb_2;user=sa;password=3K4$.2015$#";
 
 
+
+
     // Obtiene la sucursal a traves del nit
     @GetMapping("/obtener-sucursal/{nitCliente}")
     public ResponseEntity<?> obtenerSucursal(@PathVariable String nitCliente) throws SQLException {
@@ -62,6 +65,9 @@ public class usuarioController {
     }
 
 
+
+
+
     //Permite obtener el punto de envio con el nit y la sucursal
     @GetMapping("/obtener-punto-envio/{nitCliente}/{sucursal}")
     public ResponseEntity<?> obtenerPuntoEnvio(@PathVariable String nitCliente, @PathVariable String sucursal) throws SQLException {
@@ -87,6 +93,9 @@ public class usuarioController {
         }
         return new ResponseEntity<>(listadoPuntoEnvio, HttpStatus.OK);
     }
+
+
+
 
 
     // Valida si la entidad dinamica esta habilitada
@@ -122,6 +131,9 @@ public class usuarioController {
         }
         return new ResponseEntity<>(repuestaHabilitada, HttpStatus.OK);
     }
+
+
+
 
 
     //Actualizar datos de configuracion del usuario logueado
@@ -174,6 +186,9 @@ public class usuarioController {
     }
 
 
+
+
+
     //Modifica la contraseña del usuario
     @PutMapping("/update-pass-cliente/{id}")
     @ResponseStatus(HttpStatus.CREATED)
@@ -206,7 +221,6 @@ public class usuarioController {
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
         }
 
-
         //pass[0] = actual ; pass[1] = nuevo
         //Revisa que el password actual coincida con el de la BD
         if (passwordEncoder.matches(pass[0].trim(), usuario.getPassword().trim())) {
@@ -236,6 +250,69 @@ public class usuarioController {
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
         }
     }
+
+
+
+
+    //Creacion de usuario
+    @PostMapping("/crear-usuario")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> addUsuario(@Valid @RequestBody Usuario usuario, BindingResult result){
+
+        Usuario usuarioNuevo = null;
+
+        Map<String, Object> response = new HashMap<>();
+
+        // Se revisan si hay errores
+        if (result.hasErrors()){
+            System.out.println("ha habido un error en la creacion");
+
+            List<String> errors = result.getFieldErrors()
+                    .stream()
+                    .map(err -> "El campo " + err.getField() + " - " + err.getDefaultMessage())
+                    .collect(Collectors.toList());
+
+            response.put("errors", errors);
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+        }
+
+
+        //Setear las condiciones y restricciones
+        usuario.setCondicionesRestricciones(true);
+
+        //Se cargan la lista de roles para el usuario
+        List<Role> listaRol = new ArrayList<>();
+        Role role = new Role();
+        role.setId("SER");
+        role.setNombre("servicio al cliente");
+        listaRol.add(0, role);
+        usuario.setRoles(listaRol);
+
+
+
+        try {
+            usuarioNuevo = usuarioServiceObj.save(usuario);
+        }
+        catch(DataAccessException e) {
+            System.out.println("ha habido un error 2");
+            response.put("mensaje", "Error al realizar la creacion de usuario en la base de datos");
+            response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        response.put("mensaje", "El usuario ha sido creado con exito");
+        response.put("usuario", usuarioNuevo);
+
+        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
+    }
+
+
+
+
+
+
+
+
 
 
 }
