@@ -61,6 +61,10 @@ public class UsuarioService implements UsuarioServices,UserDetailsService {
         return usuarioRepositoryObj.findById(id).get();
     }
 
+    @Override
+    public List<Usuario> findAll() {
+        return (List<Usuario>) usuarioRepositoryObj.findAll();
+    }
 
     @Override
     public Usuario save(Usuario usuario) {

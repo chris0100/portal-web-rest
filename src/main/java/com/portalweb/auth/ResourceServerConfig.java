@@ -25,7 +25,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/obtener-sucursal/**", "/obtener-punto-envio/**", "/validar-entidad-dinamica/**")
+                .antMatchers(HttpMethod.GET, "/obtener-sucursal/**", "/obtener-punto-envio/**",
+                        "/validar-entidad-dinamica/**", "/listar-usuarios")
                 .permitAll()
                 .antMatchers(HttpMethod.PUT, "/update-cliente/**", "/update-pass-cliente/**")
                 .permitAll()

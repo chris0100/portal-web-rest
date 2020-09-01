@@ -2,6 +2,7 @@ package com.portalweb.controllers;
 
 import com.portalweb.models.Role;
 import com.portalweb.models.Usuario;
+import com.portalweb.repositories.RoleRepository;
 import com.portalweb.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -30,9 +31,10 @@ public class usuarioController {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
+    private RoleRepository roleRepositoryObj;
+
     String connectionUrl = "jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=BD_PortalWeb_2;user=sa;password=3K4$.2015$#";
-
-
 
 
     // Obtiene la sucursal a traves del nit
@@ -65,9 +67,6 @@ public class usuarioController {
     }
 
 
-
-
-
     //Permite obtener el punto de envio con el nit y la sucursal
     @GetMapping("/obtener-punto-envio/{nitCliente}/{sucursal}")
     public ResponseEntity<?> obtenerPuntoEnvio(@PathVariable String nitCliente, @PathVariable String sucursal) throws SQLException {
@@ -93,9 +92,6 @@ public class usuarioController {
         }
         return new ResponseEntity<>(listadoPuntoEnvio, HttpStatus.OK);
     }
-
-
-
 
 
     // Valida si la entidad dinamica esta habilitada
@@ -131,9 +127,6 @@ public class usuarioController {
         }
         return new ResponseEntity<>(repuestaHabilitada, HttpStatus.OK);
     }
-
-
-
 
 
     //Actualizar datos de configuracion del usuario logueado
@@ -184,9 +177,6 @@ public class usuarioController {
 
         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
     }
-
-
-
 
 
     //Modifica la contraseña del usuario
@@ -252,12 +242,10 @@ public class usuarioController {
     }
 
 
-
-
     //Creacion de usuario
     @PostMapping("/crear-usuario")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> addUsuario(@Valid @RequestBody Usuario usuario, BindingResult result){
+    public ResponseEntity<?> addUsuario(@Valid @RequestBody Usuario usuario, BindingResult result) {
 
         Usuario usuarioNuevo = null;
 
@@ -266,7 +254,7 @@ public class usuarioController {
         Map<String, Object> response = new HashMap<>();
 
         // Se revisan si hay errores
-        if (result.hasErrors()){
+        if (result.hasErrors()) {
             System.out.println("ha habido un error en la creacion");
 
             List<String> errors = result.getFieldErrors()
@@ -279,27 +267,27 @@ public class usuarioController {
         }
 
 
-        //Setear las condiciones y restricciones
+        //Setear las condiciones y restricciones a verdadero
         usuario.setCondicionesRestricciones(true);
 
+        //Se encripta la contraseña
+        String password = passwordEncoder.encode(usuario.getPassword());
+        usuario.setPassword(password);
 
-        //Se debe encriptar la contraseña, buscar los respectivos roles en bd para asociar
+        //Se leen los respectivos roles para que sean guardados en el usuario.
+        // Se traen de ANG los string con id_rol
+        List<Role> listaRol = new ArrayList<>();
+        for (String obj : usuario.getRolesPrincipal()) {
+            Role roleEncontrado = roleRepositoryObj.findById(obj);
+            listaRol.add(roleEncontrado);
+        }
 
-
-
-        //Se cargan la lista de roles para el usuario
-/*        List<Role> listaRol = new ArrayList<>();
-        Role role = new Role();
-        role.setId("SER");
-        role.setNombre("servicio al cliente");
-        listaRol.add(0, role);
-        usuario.setRoles(listaRol);*/
-
+        //Se cargan los roles en el usuario
+        usuario.setRoles(listaRol);
 
         try {
             usuarioNuevo = usuarioServiceObj.save(usuario);
-        }
-        catch(DataAccessException e) {
+        } catch (DataAccessException e) {
             System.out.println("ha habido un error 2");
             response.put("mensaje", "Error al realizar la creacion de usuario en la base de datos");
             response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
@@ -314,11 +302,11 @@ public class usuarioController {
 
 
 
-
-
-
-
-
+    //Traer lista de usuarios
+    @GetMapping("/listar-usuarios")
+    public List<Usuario> listarUsuarios(){
+        return usuarioServiceObj.findAll();
+    }
 
 
 }

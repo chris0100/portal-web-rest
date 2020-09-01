@@ -39,10 +39,10 @@ public class Usuario implements Serializable {
     @Column(name = "cliente", length = 70)
     private String cliente;
 
-//    @Column(name = "primer_login")
-//    private boolean primerLogin;
+    @Column(name = "primer_login")
+    private Boolean primerLogin;
 
-   /* @Column(name = "token")
+   /*@Column(name = "token")
     private String token;
 
     @Column(name = "estado_token")
@@ -52,7 +52,7 @@ public class Usuario implements Serializable {
     private Date horaToken;*/
 
     @Column(name = "intentos_bloqueo")
-    private int intentosBloqueo;
+    private Integer intentosBloqueo;
 
     @Column(name = "descripcion_punto_envio")
     private String descripcionPuntoEnvio;
@@ -62,7 +62,7 @@ public class Usuario implements Serializable {
 
 
     @Column(name = "condiciones_restricciones")
-    private boolean condicionesRestricciones;
+    private Boolean condicionesRestricciones;
 
 
 
@@ -126,15 +126,15 @@ public class Usuario implements Serializable {
         this.cliente = cliente;
     }
 
-/*    public boolean isPrimerLogin() {
+    public Boolean isPrimerLogin() {
         return primerLogin;
     }
 
-    public void setPrimerLogin(boolean primerLogin) {
+    public void setPrimerLogin(Boolean primerLogin) {
         this.primerLogin = primerLogin;
-    }*/
+    }
 
-   /* public String getToken() {
+   /*public String getToken() {
         return token;
     }
 
@@ -158,11 +158,11 @@ public class Usuario implements Serializable {
         this.horaToken = horaToken;
     }*/
 
-    public int getIntentosBloqueo() {
+    public Integer getIntentosBloqueo() {
         return intentosBloqueo;
     }
 
-    public void setIntentosBloqueo(int intentosBloqueo) {
+    public void setIntentosBloqueo(Integer intentosBloqueo) {
         this.intentosBloqueo = intentosBloqueo;
     }
 
@@ -182,11 +182,11 @@ public class Usuario implements Serializable {
         this.idPuntoEnvio = idPuntoEnvio;
     }
 
-   public boolean isCondicionesRestricciones() {
+   public Boolean isCondicionesRestricciones() {
         return condicionesRestricciones;
     }
 
-    public void setCondicionesRestricciones(boolean condicionesRestricciones) {
+    public void setCondicionesRestricciones(Boolean condicionesRestricciones) {
         this.condicionesRestricciones = condicionesRestricciones;
     }
 
