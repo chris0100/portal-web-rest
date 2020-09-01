@@ -301,11 +301,167 @@ public class usuarioController {
     }
 
 
-
     //Traer lista de usuarios
     @GetMapping("/listar-usuarios")
-    public List<Usuario> listarUsuarios(){
+    public List<Usuario> listarUsuarios() {
         return usuarioServiceObj.findAll();
+    }
+
+
+    //Traer un solo usuario a traves del id
+    @GetMapping("/obtener-usuario/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> obtenerUsuario(@PathVariable Long id) {
+
+        //Se crean los obj de usuario y response
+        Usuario usuario = null;
+        Map<String, Object> response = new HashMap<>();
+
+        //Busca el cliente por id en la BD
+        try {
+            usuario = usuarioServiceObj.findById(id);
+        } catch (DataAccessException de) {
+            response.put("mensaje", "Error al realizar la consulta en la Base de Datos");
+            response.put("error", de.getMessage() + " : " + de.getMostSpecificCause());
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        //Si el usuario no aparece en la BD, envia response
+        if (usuario == null) {
+            response.put("mensaje", "El usuario no se encuentra en la Base de Datos");
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+        }
+
+        //Si el usuario se encuentra
+        return new ResponseEntity<Usuario>(usuario, HttpStatus.OK);
+    }
+
+
+    //Actualizar otro usuario desde Admin
+    @PutMapping("/editar-otro-usuario/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> actualizarOtroUsuario(@Valid @RequestBody Usuario usuario, BindingResult result, @PathVariable Long id) {
+
+        //Se localiza el usuario actual en la BD
+        Usuario usuarioActual = usuarioServiceObj.findById(id);
+
+        //Se crea un usuario actualizado vacio que luego se carga de datos y se envia a front(ANG)
+        Usuario usuarioUpdated = null;
+
+        //Respuesta
+        Map<String, Object> response = new HashMap<>();
+
+        //Si llegan a existir errores
+        if (result.hasErrors()) {
+            List<String> errors = result.getFieldErrors()
+                    .stream()
+                    .map(err -> "El campo " + err.getField() + " - " + err.getDefaultMessage())
+                    .collect(Collectors.toList());
+
+            response.put("errors", errors);
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+        }
+
+
+        //Si el usuario que llega a existir no se encuentra en lA bd
+        if (usuarioActual == null) {
+            response.put("errors", "No se puede editar el cliente, no se encuentra en la BD");
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+        }
+
+        //Se pasan los datos
+        try {
+            usuarioActual.setNombre(usuario.getNombre());
+            usuarioActual.setNit(usuario.getNit());
+            usuarioActual.setUsername(usuario.getUsername());
+            usuarioActual.setEmail(usuario.getEmail());
+
+            //Se encripta la contraseña para pasar al usuario actual
+            String password = passwordEncoder.encode(usuario.getPassword());
+            usuarioActual.setPassword(password);
+
+            //Se leen los respectivos roles para que sean guardados en el usuario.
+            // Se traen de ANG los string con id_rol
+            if (usuario.getRolesPrincipal() != null) {
+                List<Role> listaRol = new ArrayList<>();
+                for (String obj : usuario.getRolesPrincipal()) {
+                    Role roleEncontrado = roleRepositoryObj.findById(obj);
+                    listaRol.add(roleEncontrado);
+                }
+
+                //Se cargan los roles en el usuario actual
+                usuarioActual.setRoles(listaRol);
+            }
+
+
+            //Se guarda el usuario en la base de datos
+            usuarioUpdated = usuarioServiceObj.save(usuarioActual);
+        } catch (DataAccessException e) {
+            response.put("mensaje", "Ha ocurrido un error para editar el usuario");
+            response.put("error", e.getMessage() + " : " + e.getMostSpecificCause());
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        //Si no hay errores
+        response.put("mensaje", "Se ha editado correctamente al usuario");
+        response.put("usuario", usuarioUpdated);
+        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
+    }
+
+
+    //Modifica la contraseña del usuario
+    @PutMapping("/update-pass-otro-usuario/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> modificarPasswordOtroUsuario(@Valid @RequestBody String pass, BindingResult result,
+                                                          @PathVariable Long id) {
+
+        System.out.println("nuevo pass: " + pass);
+
+        //Localiza al usuario
+        Usuario usuario = usuarioServiceObj.findById(id);
+
+        Usuario usuarioUpdated = null;
+
+        Map<String, Object> response = new HashMap<>();
+
+
+        // Si existen errores
+        if (result.hasErrors()) {
+            List<String> errors = result.getFieldErrors()
+                    .stream()
+                    .map(err -> "El campo " + err.getField() + " " + err.getDefaultMessage())
+                    .collect(Collectors.toList());
+
+            response.put("errors", errors);
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+        }
+
+
+        //Si el usuario que se quiere editar no existe en la BD
+        if (usuario == null) {
+            response.put("mensaje", "Error: No se puede editar");
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+        }
+
+
+        try {
+            //Se encripta el nuevo password
+            String nuevaPasswordEnc = passwordEncoder.encode(pass.trim());
+            usuario.setPassword(nuevaPasswordEnc);
+            usuarioUpdated = usuarioServiceObj.save(usuario);
+
+        } catch (DataAccessException de) {
+            response.put("mensaje", "Error al actualizar la contraseña en la Base de Datos");
+            response.put("error", "Error critico de almacenamiento");
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        //Si se crea correctamente el usuario envia mensaje satisfactorio.
+        response.put("mensaje", "La contraseña ha sido actualizada con exito");
+        response.put("usuario", usuarioUpdated);
+
+        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
+
     }
 
 
