@@ -26,7 +26,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/obtener-sucursal/**", "/obtener-punto-envio/**",
-                        "/validar-entidad-dinamica/**", "/listar-usuarios", "/obtener-usuario/**", "/listar-pedidos")
+                        "/validar-entidad-dinamica/**", "/listar-usuarios", "/obtener-usuario/**", "/listar-pedidos",
+                        "/listar-pedidos-borrador/**")
                 .permitAll()
                 .antMatchers(HttpMethod.PUT, "/update-cliente/**", "/update-pass-cliente/**","/editar-otro-usuario/**","/update-pass-otro-usuario/**")
                 .permitAll()

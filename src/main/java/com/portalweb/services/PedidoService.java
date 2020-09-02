@@ -14,4 +14,6 @@ public interface PedidoService {
     void save(Pedido pedido);
 
     void delete(Pedido pedido);
+
+    List<Pedido> listarPedidosBorrador(String nit, short estado);
 }
