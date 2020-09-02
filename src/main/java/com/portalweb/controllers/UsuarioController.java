@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-public class usuarioController {
+public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioServiceObj;
@@ -242,6 +242,8 @@ public class usuarioController {
     }
 
 
+
+
     //Creacion de usuario
     @PostMapping("/crear-usuario")
     @ResponseStatus(HttpStatus.CREATED)
@@ -301,11 +303,15 @@ public class usuarioController {
     }
 
 
+
+
     //Traer lista de usuarios
     @GetMapping("/listar-usuarios")
     public List<Usuario> listarUsuarios() {
         return usuarioServiceObj.findAll();
     }
+
+
 
 
     //Traer un solo usuario a traves del id
@@ -335,6 +341,9 @@ public class usuarioController {
         //Si el usuario se encuentra
         return new ResponseEntity<Usuario>(usuario, HttpStatus.OK);
     }
+
+
+
 
 
     //Actualizar otro usuario desde Admin
@@ -409,6 +418,10 @@ public class usuarioController {
     }
 
 
+
+
+
+
     //Modifica la contraseña del usuario
     @PutMapping("/update-pass-otro-usuario/{id}")
     @ResponseStatus(HttpStatus.CREATED)
@@ -461,8 +474,10 @@ public class usuarioController {
         response.put("usuario", usuarioUpdated);
 
         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
-
     }
+
+
+
 
 
 }

@@ -21,12 +21,12 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
 
 
-    //Paginas de visita libres
+    //rutas de acceso libres de autenticacion
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/obtener-sucursal/**", "/obtener-punto-envio/**",
-                        "/validar-entidad-dinamica/**", "/listar-usuarios", "/obtener-usuario/**")
+                        "/validar-entidad-dinamica/**", "/listar-usuarios", "/obtener-usuario/**", "/listar-pedidos")
                 .permitAll()
                 .antMatchers(HttpMethod.PUT, "/update-cliente/**", "/update-pass-cliente/**","/editar-otro-usuario/**","/update-pass-otro-usuario/**")
                 .permitAll()
