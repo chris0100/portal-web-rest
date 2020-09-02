@@ -98,7 +98,7 @@ public class UsuarioController {
     @GetMapping("/validar-entidad-dinamica/{nitCliente}/{sucursal}")
     public ResponseEntity<?> validarEntidadDinamica(@PathVariable String nitCliente, @PathVariable String sucursal) throws SQLException {
 
-        List<String> repuestaHabilitada = new ArrayList<>();
+        List<String> respuestaHabilitada = new ArrayList<>();
 
         Connection con = DriverManager.getConnection(connectionUrl);
         Statement stm = null;
@@ -116,7 +116,7 @@ public class UsuarioController {
             ResultSet rs = stm.executeQuery(query);
 
             while (rs.next()) {
-                repuestaHabilitada.add(rs.getString(1));
+                respuestaHabilitada.add(rs.getString(1));
             }
         } catch (SQLException e) {
             System.out.println("ha ocurrido un error en la extraccion");
@@ -125,7 +125,7 @@ public class UsuarioController {
                 stm.close();
             }
         }
-        return new ResponseEntity<>(repuestaHabilitada, HttpStatus.OK);
+        return new ResponseEntity<>(respuestaHabilitada, HttpStatus.OK);
     }
 
 

@@ -11,7 +11,10 @@ import java.util.List;
 public interface PedidoRepository extends CrudRepository<Pedido,Long> {
 
 
-    @Query("select t from Pedido t where t.idUsuario.nit = ?1 and t.estado = ?2")
+    @Query("select t from Pedido t where t.idUsuario.nit = ?1 and t.estado = ?2 order by t.fechaPedido desc")
     List<Pedido> findAllByNitAndEstado(String nit, short estado);
+
+    @Query("select t from Pedido t where t.idUsuario.nit = ?1 and t.estadoWB = ?2 order by t.fechaPedido desc")
+    List<Pedido> findAllByNitAndEstadoWB(String nit, short estadoWB);
 
 }

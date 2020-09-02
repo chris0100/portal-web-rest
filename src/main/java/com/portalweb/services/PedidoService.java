@@ -16,4 +16,8 @@ public interface PedidoService {
     void delete(Pedido pedido);
 
     List<Pedido> listarPedidosBorrador(String nit, short estado);
+
+    List<Pedido> listarPedidosVerificacion(String nit, short estadoWB);
+
+
 }

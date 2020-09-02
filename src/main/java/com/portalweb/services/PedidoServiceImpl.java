@@ -42,9 +42,17 @@ public class PedidoServiceImpl implements PedidoService{
     }
 
 
-    //Listar un pedido en estado borrador(0) con el nit del usuario que consulta
+    //Listar un pedido en estado borrador(0 estado) con el nit del usuario que consulta
     @Override
     public List<Pedido> listarPedidosBorrador(String nit, short estado) {
         return pedidoRepositoryObj.findAllByNitAndEstado(nit, estado);
     }
+
+    //Listar un pedido en estado de verificacion(1 estadowb) con el nit del usuario que consulta
+    @Override
+    public List<Pedido> listarPedidosVerificacion(String nit, short estadoWB) {
+        return pedidoRepositoryObj.findAllByNitAndEstadoWB(nit, estadoWB);
+    }
+
+
 }
