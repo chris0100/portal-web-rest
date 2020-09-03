@@ -1,6 +1,8 @@
 package com.portalweb.services;
 
+import com.portalweb.models.ItemPedido;
 import com.portalweb.models.Pedido;
+import com.portalweb.repositories.ItemPedidoRepository;
 import com.portalweb.repositories.PedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,9 @@ public class PedidoServiceImpl implements PedidoService{
 
     @Autowired
     private PedidoRepository pedidoRepositoryObj;
+
+    @Autowired
+    private ItemPedidoRepository itemPedidoRepositoryObj;
 
 
     //Listar todos los pedidos

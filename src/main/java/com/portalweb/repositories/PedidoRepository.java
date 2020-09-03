@@ -1,5 +1,6 @@
 package com.portalweb.repositories;
 
+import com.portalweb.models.ItemPedido;
 import com.portalweb.models.Pedido;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -16,5 +17,7 @@ public interface PedidoRepository extends CrudRepository<Pedido,Long> {
 
     @Query("select t from Pedido t where t.idUsuario.nit = ?1 and t.estadoWB = ?2 order by t.fechaPedido desc")
     List<Pedido> findAllByNitAndEstadoWB(String nit, short estadoWB);
+
+
 
 }

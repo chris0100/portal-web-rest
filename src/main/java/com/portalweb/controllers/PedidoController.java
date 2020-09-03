@@ -1,14 +1,13 @@
 package com.portalweb.controllers;
 
+import com.portalweb.models.ItemPedido;
 import com.portalweb.models.Pedido;
 import com.portalweb.services.PedidoService;
 import com.portalweb.services.UnoEEService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +48,15 @@ public class PedidoController {
     }
 
 
+    //Obtener lista de items de verificacion
+    @GetMapping("/obtener-lista-items-vb/{idPedido}")
+    public Pedido listaItemPedidos(@PathVariable Long idPedido){
+        Pedido pedidoActual = pedidoServiceObj.findById(idPedido);
+        System.out.println(pedidoActual.getListaItemPedido().size());
+        return pedidoActual;
+    }
+
+
 
     //Obtener la lista del historial de pedidos
     @GetMapping("/listar-historial-pedidos/{nit}/{fechaParametro1}/{fechaParametro2}")
@@ -70,9 +78,11 @@ public class PedidoController {
     @GetMapping("/obtener-lista-items-pedidoUnoEE/{rowId}")
     public List<ItemPedidoUnoEEController> listaItemsPedido(@PathVariable int rowId) throws SQLException {
         List<ItemPedidoUnoEEController> listaItemsPedido = unoEEServiceObj.listaItemsByRowId(rowId);
-
         return listaItemsPedido;
     }
+
+
+
 
 
 

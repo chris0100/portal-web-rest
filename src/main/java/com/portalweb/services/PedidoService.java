@@ -1,6 +1,7 @@
 package com.portalweb.services;
 
 
+import com.portalweb.models.ItemPedido;
 import com.portalweb.models.Pedido;
 
 import java.util.List;
@@ -18,6 +19,8 @@ public interface PedidoService {
     List<Pedido> listarPedidosBorrador(String nit, short estado);
 
     List<Pedido> listarPedidosVerificacion(String nit, short estadoWB);
+
+
 
 
 }
