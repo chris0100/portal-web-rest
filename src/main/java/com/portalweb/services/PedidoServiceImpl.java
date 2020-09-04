@@ -59,5 +59,8 @@ public class PedidoServiceImpl implements PedidoService{
         return pedidoRepositoryObj.findAllByNitAndEstadoWB(nit, estadoWB);
     }
 
-
+    @Override
+    public String obtenerPuntoEnvio(String nit, String idSucursal, String idPuntoEnvio) {
+        return pedidoRepositoryObj.puntoEnvio(nit,idSucursal,idPuntoEnvio);
+    }
 }

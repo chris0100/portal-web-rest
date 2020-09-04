@@ -18,6 +18,9 @@ public interface PedidoRepository extends CrudRepository<Pedido,Long> {
     @Query("select t from Pedido t where t.idUsuario.nit = ?1 and t.estadoWB = ?2 order by t.fechaPedido desc")
     List<Pedido> findAllByNitAndEstadoWB(String nit, short estadoWB);
 
+    @Query(value = "exec dbo.sp_obtener_punto_envio ?1,?2,?3", nativeQuery = true)
+    String puntoEnvio(String nit, String idSucursal, String idPuntoEnvio);
+
 
 
 }

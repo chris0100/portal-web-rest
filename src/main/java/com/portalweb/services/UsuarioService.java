@@ -26,7 +26,9 @@ public class UsuarioService implements UsuarioServices,UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Usuario usuario = usuarioRepositoryObj.findByUsername(username);
+        System.out.println(username + "username ing");
+        Usuario usuario = usuarioRepositoryObj.findAllByUsername(username).get(0);
+        //Usuario usuario = usuarioRepositoryObj.findByNit()
 
         if (usuario != null) {
             System.out.println("datos usuario: " + usuario.getUsername() + ": " + usuario.getNombre() + ": " + usuario.getPassword() + ":" + usuario.getId());
@@ -52,7 +54,7 @@ public class UsuarioService implements UsuarioServices,UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public Usuario findByUsername(String username) {
-        return usuarioRepositoryObj.findByUsername(username);
+        return usuarioRepositoryObj.findAllByUsername(username).get(0);
     }
 
 

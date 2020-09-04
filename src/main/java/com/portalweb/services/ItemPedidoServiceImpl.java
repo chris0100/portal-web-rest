@@ -36,4 +36,14 @@ public class ItemPedidoServiceImpl implements ItemPedidoService{
     public void delete(ItemPedido itemPedido) {
         itemPedidoRepositoryObj.delete(itemPedido);
     }
+
+    @Override
+    public Integer contarMostrarPanel(String nit) {
+        return itemPedidoRepositoryObj.contarMostrarPanel(nit).size();
+    }
+
+    @Override
+    public List<String> obtenerListaItemPatron() {
+        return itemPedidoRepositoryObj.listaItemPatron();
+    }
 }

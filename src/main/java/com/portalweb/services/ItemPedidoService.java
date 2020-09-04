@@ -14,4 +14,8 @@ public interface ItemPedidoService {
 
     void delete(ItemPedido itemPedido);
 
+    Integer contarMostrarPanel(String nit);
+
+    List<String> obtenerListaItemPatron();
+
 }

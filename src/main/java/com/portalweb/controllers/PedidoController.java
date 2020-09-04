@@ -1,13 +1,13 @@
 package com.portalweb.controllers;
 
-import com.portalweb.models.ItemPedido;
+
 import com.portalweb.models.Pedido;
+import com.portalweb.services.ItemPedidoService;
 import com.portalweb.services.PedidoService;
 import com.portalweb.services.UnoEEService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +21,9 @@ public class PedidoController {
 
     @Autowired
     private UnoEEService unoEEServiceObj;
+
+    @Autowired
+    private ItemPedidoService itemPedidoServiceObj;
 
 
     //Obtiene la lista de los pedidos
@@ -80,6 +83,38 @@ public class PedidoController {
         List<ItemPedidoUnoEEController> listaItemsPedido = unoEEServiceObj.listaItemsByRowId(rowId);
         return listaItemsPedido;
     }
+
+
+
+    //Obtener punto de envio de acuerdo al nit y la sucursal
+    @GetMapping("/obtener-punto-envio/{nit}/{idSucursal}/{idPuntoEnvio}")
+    public List<String> obtenerPuntoEnvio(@PathVariable String nit, @PathVariable String idSucursal, @PathVariable String idPuntoEnvio){
+        List<String> lista = new ArrayList<>();
+        lista.add(pedidoServiceObj.obtenerPuntoEnvio(nit,idSucursal,idPuntoEnvio));
+       return lista;
+    }
+
+
+
+    //Cuenta el item homologado para saber que pestaña habilitar en la pagina crear pedido
+    //homologado = tiene su propio codigo de cliente.
+    //no homologado = realiza la busqueda por codigo de barras.
+    @GetMapping("/contar-mostrar-panel/{nit}")
+    public List<Integer> contarMostrarPanel(@PathVariable String nit){
+        List<Integer> lista = new ArrayList<>();
+        lista.add(itemPedidoServiceObj.contarMostrarPanel(nit));
+        System.out.println(lista.get(0));
+        return lista;
+    }
+
+
+
+    //Consulta la lista item Patron para mostrar os items disponibles
+    @GetMapping("/lista-item-patron")
+    public List<String> listaItemPatron(){
+        return itemPedidoServiceObj.obtenerListaItemPatron();
+    }
+
 
 
 

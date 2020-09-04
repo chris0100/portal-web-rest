@@ -28,16 +28,16 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/obtener-sucursal/**", "/obtener-punto-envio/**",
                         "/validar-entidad-dinamica/**", "/listar-usuarios", "/obtener-usuario/**", "/listar-pedidos",
                         "/listar-pedidos-borrador/**", "/listar-pedidos-verificacion/**", "/listar-historial-pedidos/**", "/obtener-lista-items-pedidoUnoEE/**",
-                        "/obtener-lista-items-vb/**")
+                        "/obtener-lista-items-vb/**", "/obtener-punto-envio/**", "/contar-mostrar-panel/**", "/lista-item-patron")
                 .permitAll()
                 .antMatchers(HttpMethod.PUT, "/update-cliente/**", "/update-pass-cliente/**","/editar-otro-usuario/**","/update-pass-otro-usuario/**")
                 .permitAll()
                 .antMatchers(HttpMethod.POST, "/crear-usuario/**")
                 .permitAll()
-                /*.antMatchers(HttpMethod.GET, "/api/clientes/{id}").hasAnyRole("USER","ADMIN")
-                .antMatchers(HttpMethod.POST, "/api/clientes/upload").hasAnyRole("USER","ADMIN")
-                .antMatchers(HttpMethod.POST, "/api/clientes").hasRole("ADMIN")
-                .antMatchers("/api/clientes/**").hasRole("ADMIN")*/
+                /*.antMatchers(HttpMethod.GET, "").hasAnyRole("USER","ADMIN")
+                .antMatchers(HttpMethod.POST, "").hasAnyRole("USER","ADMIN")
+                .antMatchers(HttpMethod.POST, "").hasRole("ADMIN")
+                .antMatchers("").hasRole("ADMIN")*/
                 .anyRequest().authenticated()
                 .and().cors().configurationSource(corsConfigurationSource());
     }

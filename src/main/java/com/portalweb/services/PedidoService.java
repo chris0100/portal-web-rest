@@ -20,6 +20,8 @@ public interface PedidoService {
 
     List<Pedido> listarPedidosVerificacion(String nit, short estadoWB);
 
+    String obtenerPuntoEnvio(String nit, String idSucursal, String idPuntoEnvio);
+
 
 
 
