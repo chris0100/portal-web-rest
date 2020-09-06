@@ -23,4 +23,6 @@ public interface ItemPedidoRepository extends CrudRepository<ItemPedido, Long> {
             "like '%.ex%' and t120.f120_ind_venta = 1 ORDER BY f120_id ASC ", nativeQuery = true)
     List<String> listaItemPatron();
 
+
+
 }

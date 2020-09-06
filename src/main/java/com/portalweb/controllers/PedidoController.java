@@ -117,6 +117,84 @@ public class PedidoController {
 
 
 
+    // Consultar el tipo de extensiones
+    @GetMapping("/tipo-extensiones/{idItem}")
+    public List<String> consultaTipoExtensiones(@PathVariable String idItem){
+        return itemPedidoServiceObj.consultaTipoExtensiones(Integer.parseInt(idItem));
+    }
+
+
+    //Consulta Ext1(TAMAÑO)
+    @GetMapping("/ext1/{tipoExt}")
+    public List<String> consultaExt1(@PathVariable String tipoExt){
+        return itemPedidoServiceObj.consultaExt1(tipoExt);
+    }
+
+
+
+    //Consulta Ext2(COLOR)
+    @GetMapping("/ext2/{tipoExt}")
+    public List<String> consultaExt2(@PathVariable String tipoExt){
+        return itemPedidoServiceObj.consultaExt2(tipoExt);
+    }
+
+
+    //Consultar unidad inventario
+    @GetMapping("/unidad-inventario/{idItem}")
+    public List<String> consultaUnidadInventario(@PathVariable String idItem) {
+        return itemPedidoServiceObj.consultaUnidadInventario(Integer.parseInt(idItem));
+    }
+
+
+    //Consulta decimales unidad inventario
+    @GetMapping("/decimales-unidad-inventario/{unidadMedida}")
+    public List<String> consultaDecimalesUnidadInventario(@PathVariable String unidadMedida){
+        return itemPedidoServiceObj.consultaDecimalesUnidadInventario(unidadMedida);
+    }
+
+
+    //Consulta descripcion label ext1
+    @GetMapping("/consulta-descripcion-label-ext1/{tipoExt}")
+    public List<String> consultaDescripcionLabelExt1(@PathVariable String tipoExt){
+        List<String> listaExt1 = itemPedidoServiceObj.consultaDescripcionLabelExt1(tipoExt);
+        String ext1="";
+        for(String obj : listaExt1){
+            ext1 = Character.toUpperCase(obj.charAt(0)) + obj.substring(1, obj.length()).toLowerCase();
+        }
+       listaExt1.add(0,ext1);
+        listaExt1.remove(1);
+        return listaExt1;
+    }
+
+
+    //Consulta descripcion label ext2
+    @GetMapping("/consulta-descripcion-label-ext2/{tipoExt}")
+    public List<String> consultaDescripcionLabelExt2(@PathVariable String tipoExt){
+        List<String> listaExt2 = itemPedidoServiceObj.consultaDescripcionLabelExt2(tipoExt);
+        String ext2="";
+        for(String obj : listaExt2){
+            ext2 = Character.toUpperCase(obj.charAt(0)) + obj.substring(1, obj.length()).toLowerCase();
+        }
+        listaExt2.add(0,ext2);
+        listaExt2.remove(1);
+        return listaExt2;
+    }
+
+
+
+    // Obtener Bodega Item
+    @GetMapping("/obtener-bodega-item/{idItem}")
+    public List <String> obtenerBodegaItem(@PathVariable String idItem) throws SQLException {
+        List<String> listaBodegaItem = new ArrayList<>();
+        listaBodegaItem.add(unoEEServiceObj.obtenerBodegaItem(Integer.parseInt(idItem)));
+        return listaBodegaItem;
+    }
+
+
+
+
+
+
 
 
 

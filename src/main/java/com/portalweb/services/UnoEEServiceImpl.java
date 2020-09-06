@@ -126,4 +126,30 @@ public class UnoEEServiceImpl implements UnoEEService{
 
 
 
+    public String obtenerBodegaItem(int codItem) throws SQLException {
+        String connectionUrl = "jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=UnoEE;user=bd_eureka;password=Desarrollos478#";
+        Connection con = DriverManager.getConnection(connectionUrl);
+        Statement stmt = null;
+
+        String query = "SELECT top 1 t150.f150_id idBodega FROM [t753_mm_movto_entidad_columna] t753 inner join t149_mc_tipo_inv_serv t149  on t149.f149_rowid_movto_entidad = t753.f753_rowid_movto_entidad inner join t150_mc_bodegas t150 on t150.f150_rowid = t753.f753_dato_numero inner join v121 v121 on v121.v121_id_tipo_inv_serv =  t149.f149_id WHERE v121.v121_id_item = " + codItem;
+        String bodega = "";
+        try {
+            stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                bodega = rs.getString("idBodega");
+                break;
+            }
+        } catch (SQLException e) {
+            System.out.println("error " + e);
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+        return bodega;
+    }
+
+
+
 }

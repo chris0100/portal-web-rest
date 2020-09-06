@@ -14,4 +14,6 @@ public interface UnoEEService {
                                                      String fechaParametro2, String rowIdCliente) throws SQLException;
 
     List<ItemPedidoUnoEEController> listaItemsByRowId(int rowId) throws SQLException;
+
+    String obtenerBodegaItem(int idItem) throws SQLException;
 }

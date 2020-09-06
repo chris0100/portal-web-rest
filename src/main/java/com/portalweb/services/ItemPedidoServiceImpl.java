@@ -2,6 +2,7 @@ package com.portalweb.services;
 
 import com.portalweb.models.ItemPedido;
 import com.portalweb.repositories.ItemPedidoRepository;
+import com.portalweb.repositories.UnoEERepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,9 @@ public class ItemPedidoServiceImpl implements ItemPedidoService{
 
     @Autowired
     private ItemPedidoRepository itemPedidoRepositoryObj;
+
+    @Autowired
+    private UnoEERepository unoEERepositoryObj;
 
 
     @Override
@@ -45,5 +49,43 @@ public class ItemPedidoServiceImpl implements ItemPedidoService{
     @Override
     public List<String> obtenerListaItemPatron() {
         return itemPedidoRepositoryObj.listaItemPatron();
+    }
+
+
+    @Override
+    public List<String> consultaTipoExtensiones(int idItem) {
+        return unoEERepositoryObj.execTipoExtensiones(idItem);
+    }
+
+
+    @Override
+    public List<String> consultaExt1(String tipoExt) {
+        return unoEERepositoryObj.execListaExt1(tipoExt);
+    }
+
+    @Override
+    public List<String> consultaExt2(String tipoExt) {
+        return unoEERepositoryObj.execListaExt2(tipoExt);
+    }
+
+
+    @Override
+    public List<String> consultaUnidadInventario(int idItem) {
+        return unoEERepositoryObj.execUnidadInventario(idItem);
+    }
+
+    @Override
+    public List<String> consultaDecimalesUnidadInventario(String unidadMedida) {
+        return unoEERepositoryObj.execDecimalesUnidadInventario(unidadMedida);
+    }
+
+    @Override
+    public List<String> consultaDescripcionLabelExt1(String tipoExt) {
+        return unoEERepositoryObj.execDescripcionLabelExt1(tipoExt);
+    }
+
+    @Override
+    public List<String> consultaDescripcionLabelExt2(String tipoExt) {
+        return unoEERepositoryObj.execDescripcionLabelExt2(tipoExt);
     }
 }

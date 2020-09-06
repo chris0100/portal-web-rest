@@ -18,4 +18,18 @@ public interface ItemPedidoService {
 
     List<String> obtenerListaItemPatron();
 
+    List<String> consultaTipoExtensiones(int idItem);
+
+    List<String> consultaExt1(String tipoExt);
+
+    List<String> consultaExt2(String tipoExt);
+
+    List<String> consultaUnidadInventario(int idItem);
+
+    List<String> consultaDecimalesUnidadInventario(String unidadMedida);
+
+    List<String> consultaDescripcionLabelExt1(String tipoExt);
+
+    List<String> consultaDescripcionLabelExt2(String tipoExt);
+
 }
