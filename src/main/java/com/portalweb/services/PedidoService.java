@@ -12,7 +12,7 @@ public interface PedidoService {
 
     Pedido findById(Long id);
 
-    void save(Pedido pedido);
+    Pedido save(Pedido pedido);
 
     void delete(Pedido pedido);
 

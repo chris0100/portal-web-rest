@@ -90,10 +90,7 @@ public class ItemPedido implements Serializable {
     @Column(name = "cantidad", precision = 28, scale = 4)
     private BigDecimal cantidad;
 
-    @JsonIgnoreProperties(value= {"idPedido", "hibernateLazyInitializer", "handler"}, allowSetters = true) //Evitamos el ciclo infinito del json cuando se consume el get
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_pedido")
-    private Pedido idPedido;
+
 
 
 
@@ -268,14 +265,35 @@ public class ItemPedido implements Serializable {
         this.cantidad = cantidad;
     }
 
-    public Pedido getIdPedido() {
-        return idPedido;
-    }
 
-    public void setIdPedido(Pedido idPedido) {
-        this.idPedido = idPedido;
-    }
 
     private static final long serialVersionUID = 1L;
 
+
+    @Override
+    public String toString() {
+        return "ItemPedido{" +
+                "idItem=" + idItem +
+                ", codItem=" + codItem +
+                ", codCliente='" + codCliente + '\'' +
+                ", descripcion='" + descripcion + '\'' +
+                ", idExt1Detalle='" + idExt1Detalle + '\'' +
+                ", idExt2Detalle='" + idExt2Detalle + '\'' +
+                ", descripcionExt1='" + descripcionExt1 + '\'' +
+                ", descripcionExt2='" + descripcionExt2 + '\'' +
+                ", descripcionCompletaItem='" + descripcionCompletaItem + '\'' +
+                ", unidadMedida='" + unidadMedida + '\'' +
+                ", precioUnitario=" + precioUnitario +
+                ", precioUnitarioUnoee=" + precioUnitarioUnoee +
+                ", notasItem='" + notasItem + '\'' +
+                ", idBodega='" + idBodega + '\'' +
+                ", idMotivo='" + idMotivo + '\'' +
+                ", fechaActualizacionPrecioUnoee=" + fechaActualizacionPrecioUnoee +
+                ", unoeeItem=" + unoeeItem +
+                ", unoeePrecios=" + unoeePrecios +
+                ", unoeePortafolio=" + unoeePortafolio +
+                ", unoeeListasMateriales=" + unoeeListasMateriales +
+                ", cantidad=" + cantidad +
+                '}';
+    }
 }

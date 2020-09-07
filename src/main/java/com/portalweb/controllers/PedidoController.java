@@ -6,11 +6,20 @@ import com.portalweb.services.ItemPedidoService;
 import com.portalweb.services.PedidoService;
 import com.portalweb.services.UnoEEService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -195,8 +204,60 @@ public class PedidoController {
     //Conteo sobre si existe un item duplicado homologado
     @GetMapping("/contar-homologar-item-duplicado/{nit}/{codCliente}")
     public List<String> contarHomologarItemDuplicado(@PathVariable String nit, @PathVariable String codCliente){
-        return itemPedidoServiceObj.contarHomologarItemDuplicado(nit, codCliente);
+        return itemPedidoServiceObj.contarHomologarItemDuplicado("890924167", codCliente);
     }
+
+
+
+
+    // Guardar el pedido borrador en la base de datos
+    @PostMapping("/add-pedido-borrador")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> addPedidoBorrador(@Valid @RequestBody Pedido pedido, BindingResult result) {
+
+        Pedido pedidoNuevo = null;
+
+        Map<String, Object> response = new HashMap<>();
+
+        // Se revisan los errores
+        if (result.hasErrors()){
+            System.out.println("han ocurrido errores");
+
+            List<String> errors = result.getFieldErrors()
+                    .stream()
+                    .map(err -> "el campo " + err.getField() + " : " + err.getDefaultMessage())
+                    .collect(Collectors.toList());
+
+            response.put("errors", errors);
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        try{
+            //Se guarda el pedido en la base de datos
+            System.out.println("**********************************************");
+            System.out.println("Este es el borrador a crear " + pedido.toString());
+            System.out.println("***********************************************");
+
+            // Se asigna fecha actual
+            pedido.setFechaPedido(new Date());
+
+
+
+            pedidoNuevo = pedidoServiceObj.save(pedido);
+        } catch(DataAccessException e){
+            System.out.println("existe un error para guardar en la BD");
+            response.put("mensaje", "Error al realizar la creacion del pedido en la BD");
+            response.put("error", e.getMessage() + " : " + e.getMostSpecificCause());
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        response.put("mensaje", "El borrador del pedido ha sido creado con exito");
+
+        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
+    }
+
+
+
 
 
 

@@ -92,9 +92,9 @@ public class Pedido implements Serializable {
     @Column(name = "punto_envio")
     private String puntoEnvio;
 
-    @JsonIgnoreProperties(value= {"idPedido","hibernateLazyInitializer", "handler"}, allowSetters = true)
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "idPedido",cascade = CascadeType.ALL)
-    @NotEmpty(message = "El pedido debe contener productos")
+    @JsonIgnoreProperties(value= {"hibernateLazyInitializer", "handler"})
+    @JoinColumn(name = "id_pedido")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ItemPedido> listaItemPedido;
 
 
@@ -271,4 +271,31 @@ public class Pedido implements Serializable {
     }
 
     private static final long serialVersionUID = 1L;
+
+    @Override
+    public String toString() {
+        return "Pedido{" +
+                "id=" + id +
+                ", codPedido='" + codPedido + '\'' +
+                ", nota='" + nota + '\'' +
+                ", estado=" + estado +
+                ", fechaPedido=" + fechaPedido +
+                ", totalBruto=" + totalBruto +
+                ", descuentos=" + descuentos +
+                ", impuestos=" + impuestos +
+                ", total=" + total +
+                ", sucursalRemisionar='" + sucursalRemisionar + '\'' +
+                ", sucursalFacturar='" + sucursalFacturar + '\'' +
+                ", terceroVendedor='" + terceroVendedor + '\'' +
+                ", contacto='" + contacto + '\'' +
+                ", direccion='" + direccion + '\'' +
+                ", oc='" + oc + '\'' +
+                ", idUsuario=" + idUsuario +
+                ", terceroAsesor='" + terceroAsesor + '\'' +
+                ", estadoWB=" + estadoWB +
+                ", mensajeWB='" + mensajeWB + '\'' +
+                ", puntoEnvio='" + puntoEnvio + '\'' +
+                ", listaItemPedido=" + listaItemPedido +
+                '}';
+    }
 }

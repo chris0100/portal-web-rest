@@ -35,8 +35,8 @@ public class PedidoServiceImpl implements PedidoService{
 
     //Guardar un pedido
     @Override
-    public void save(Pedido pedido) {
-        pedidoRepositoryObj.save(pedido);
+    public Pedido save(Pedido pedido) {
+        return pedidoRepositoryObj.save(pedido);
     }
 
 
