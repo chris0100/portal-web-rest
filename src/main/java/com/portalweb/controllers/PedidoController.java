@@ -192,6 +192,14 @@ public class PedidoController {
 
 
 
+    //Conteo sobre si existe un item duplicado homologado
+    @GetMapping("/contar-homologar-item-duplicado/{nit}/{codCliente}")
+    public List<String> contarHomologarItemDuplicado(@PathVariable String nit, @PathVariable String codCliente){
+        return itemPedidoServiceObj.contarHomologarItemDuplicado(nit, codCliente);
+    }
+
+
+
 
 
 

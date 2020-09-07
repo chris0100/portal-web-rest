@@ -88,4 +88,10 @@ public class ItemPedidoServiceImpl implements ItemPedidoService{
     public List<String> consultaDescripcionLabelExt2(String tipoExt) {
         return unoEERepositoryObj.execDescripcionLabelExt2(tipoExt);
     }
+
+
+    @Override
+    public List<String> contarHomologarItemDuplicado(String nit, String codCliente) {
+        return itemPedidoRepositoryObj.contarHomologarItemDuplicado(nit, codCliente);
+    }
 }

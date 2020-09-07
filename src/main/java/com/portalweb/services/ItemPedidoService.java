@@ -32,4 +32,6 @@ public interface ItemPedidoService {
 
     List<String> consultaDescripcionLabelExt2(String tipoExt);
 
+    List<String> contarHomologarItemDuplicado(String nit, String codCliente);
+
 }
