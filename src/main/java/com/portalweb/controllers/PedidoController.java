@@ -252,8 +252,17 @@ public class PedidoController {
         }
 
         response.put("mensaje", "El borrador del pedido ha sido creado con exito");
+        response.put("nuevoId", pedidoNuevo.getId()+""); // envia el id que se genera despues de guardar en la BD
 
         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
+    }
+
+
+
+    //Obtener datos del asesor UnoEE
+    @GetMapping("/obtener-datos-asesor-unoee/{idSucursal}/{nit}")
+    public List<String> obtenerDatosAsesorUnoEE(@PathVariable String idSucursal, @PathVariable String nit) throws SQLException {
+        return unoEEServiceObj.obtenerDatosAsesorUnoEE(idSucursal,nit);
     }
 
 

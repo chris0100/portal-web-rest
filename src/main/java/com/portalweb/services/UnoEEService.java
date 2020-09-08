@@ -16,4 +16,6 @@ public interface UnoEEService {
     List<ItemPedidoUnoEEController> listaItemsByRowId(int rowId) throws SQLException;
 
     String obtenerBodegaItem(int idItem) throws SQLException;
+
+    List<String> obtenerDatosAsesorUnoEE(String idSucursal, String nit) throws SQLException;
 }

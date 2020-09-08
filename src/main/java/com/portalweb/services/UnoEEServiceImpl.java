@@ -126,6 +126,8 @@ public class UnoEEServiceImpl implements UnoEEService{
 
 
 
+    // Obtener la bodega a la cual pertenece el item
+    @Override
     public String obtenerBodegaItem(int codItem) throws SQLException {
         String connectionUrl = "jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=UnoEE;user=bd_eureka;password=Desarrollos478#";
         Connection con = DriverManager.getConnection(connectionUrl);
@@ -149,6 +151,50 @@ public class UnoEEServiceImpl implements UnoEEService{
         }
         return bodega;
     }
+
+
+    // Obtener los datos del asesor UnoEE
+    @Override
+    public List<String> obtenerDatosAsesorUnoEE(String idSucursal, String nit)
+            throws SQLException {
+
+        String connectionUrl = "jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=UnoEE;user=bd_eureka;password=Desarrollos478#";
+        Connection con = DriverManager.getConnection(connectionUrl);
+        Statement stmt = null;
+
+        String nombreAsesor="";
+        String correoAsesor="";
+        String nitAsesor="";
+
+        //Query que obtiene los datos del asesor.
+        String query = "Select top 1 t200asesor.f200_nit nit_asesor, t015asesor.f015_email correo_asesor ,t200asesor.f200_razon_social nombre_asesor From UnoEE.dbo.t200_mm_terceros f inner join UnoEE.dbo.t204_mm_planes_criterios t204asesor on t204asesor.f204_id  = '005' left	join  UnoEE.dbo.t207_mm_criterios_clientes t207asesor on f207_id_cia = 1 and t207asesor.f207_rowid_tercero = f.f200_rowid  and  t207asesor.f207_id_sucursal = '" + idSucursal + "' and	 t207asesor.f207_id_plan_criterios = f204_id left	join  UnoEE.dbo.t206_mm_criterios_mayores t206asesor on f206_id_cia =1 		and	 t206asesor.f206_id_plan = f207_id_plan_criterios and	 t206asesor.f206_id = f207_id_criterio_mayor inner join  UnoEE.dbo.t200_mm_terceros t200asesor on t200asesor.f200_nit = convert(varchar,(convert(int, left (f206_descripcion, patindex('%[^0-9]%',f206_descripcion +' ')-1)))) inner join  UnoEE.dbo.t015_mm_contactos t015asesor on t200asesor.f200_rowid_contacto = t015asesor.f015_rowid where f.f200_nit = '" + nit + "'";
+
+        try {
+            stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                nombreAsesor = rs.getString("nombre_asesor");
+                correoAsesor = rs.getString("correo_asesor");
+                nitAsesor = rs.getString("nit_asesor");
+            }
+
+            List<String> listaDatos = new ArrayList<>();
+            listaDatos.add(nombreAsesor);
+            listaDatos.add(correoAsesor);
+            listaDatos.add(nitAsesor);
+
+            return listaDatos;
+        } catch (SQLException e) {
+            System.out.println("error " + e);
+            return new ArrayList<>();
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
+
+
 
 
 
