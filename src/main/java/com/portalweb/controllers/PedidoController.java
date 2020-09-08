@@ -42,15 +42,11 @@ public class PedidoController {
     }
 
 
-
-
-
     //Obtener la lista de pedidos en borrador
     @GetMapping("/listar-pedidos-borrador/{nit}")
     public List<Pedido> listarPedidosBorrador(@PathVariable String nit) {
         return pedidoServiceObj.listarPedidosBorrador(nit, (short) 0);
     }
-
 
 
     //Obtener la lista de pedidos en verificacion
@@ -62,12 +58,11 @@ public class PedidoController {
 
     //Obtener lista de items de verificacion
     @GetMapping("/obtener-lista-items-vb/{idPedido}")
-    public Pedido listaItemPedidos(@PathVariable Long idPedido){
+    public Pedido listaItemPedidos(@PathVariable Long idPedido) {
         Pedido pedidoActual = pedidoServiceObj.findById(idPedido);
         System.out.println(pedidoActual.getListaItemPedido().size());
         return pedidoActual;
     }
-
 
 
     //Obtener la lista del historial de pedidos
@@ -79,8 +74,8 @@ public class PedidoController {
         //Se obtiene el rowIdCliente
         String rowIdCliente = unoEEServiceObj.findRowIdCliente(nit);
 
-        List<PedidoUnoeeController> listaHistorialPedidos = unoEEServiceObj.listaHistorialPedido(nit,fechaParametro1
-                ,fechaParametro2,rowIdCliente);
+        List<PedidoUnoeeController> listaHistorialPedidos = unoEEServiceObj.listaHistorialPedido(nit, fechaParametro1
+                , fechaParametro2, rowIdCliente);
 
         return listaHistorialPedidos;
     }
@@ -94,22 +89,20 @@ public class PedidoController {
     }
 
 
-
     //Obtener punto de envio de acuerdo al nit y la sucursal
     @GetMapping("/obtener-punto-envio/{nit}/{idSucursal}/{idPuntoEnvio}")
-    public List<String> obtenerPuntoEnvio(@PathVariable String nit, @PathVariable String idSucursal, @PathVariable String idPuntoEnvio){
+    public List<String> obtenerPuntoEnvio(@PathVariable String nit, @PathVariable String idSucursal, @PathVariable String idPuntoEnvio) {
         List<String> lista = new ArrayList<>();
-        lista.add(pedidoServiceObj.obtenerPuntoEnvio(nit,idSucursal,idPuntoEnvio));
-       return lista;
+        lista.add(pedidoServiceObj.obtenerPuntoEnvio(nit, idSucursal, idPuntoEnvio));
+        return lista;
     }
-
 
 
     //Cuenta el item homologado para saber que pestaña habilitar en la pagina crear pedido
     //homologado = tiene su propio codigo de cliente.
     //no homologado = realiza la busqueda por codigo de barras.
     @GetMapping("/contar-mostrar-panel/{nit}")
-    public List<Integer> contarMostrarPanel(@PathVariable String nit){
+    public List<Integer> contarMostrarPanel(@PathVariable String nit) {
         List<Integer> lista = new ArrayList<>();
         lista.add(itemPedidoServiceObj.contarMostrarPanel(nit));
         System.out.println(lista.get(0));
@@ -117,33 +110,30 @@ public class PedidoController {
     }
 
 
-
     //Consulta la lista item Patron para mostrar os items disponibles
     @GetMapping("/lista-item-patron")
-    public List<String> listaItemPatron(){
+    public List<String> listaItemPatron() {
         return itemPedidoServiceObj.obtenerListaItemPatron();
     }
 
 
-
     // Consultar el tipo de extensiones
     @GetMapping("/tipo-extensiones/{idItem}")
-    public List<String> consultaTipoExtensiones(@PathVariable String idItem){
+    public List<String> consultaTipoExtensiones(@PathVariable String idItem) {
         return itemPedidoServiceObj.consultaTipoExtensiones(Integer.parseInt(idItem));
     }
 
 
     //Consulta Ext1(TAMAÑO)
     @GetMapping("/ext1/{tipoExt}")
-    public List<String> consultaExt1(@PathVariable String tipoExt){
+    public List<String> consultaExt1(@PathVariable String tipoExt) {
         return itemPedidoServiceObj.consultaExt1(tipoExt);
     }
 
 
-
     //Consulta Ext2(COLOR)
     @GetMapping("/ext2/{tipoExt}")
-    public List<String> consultaExt2(@PathVariable String tipoExt){
+    public List<String> consultaExt2(@PathVariable String tipoExt) {
         return itemPedidoServiceObj.consultaExt2(tipoExt);
     }
 
@@ -157,20 +147,20 @@ public class PedidoController {
 
     //Consulta decimales unidad inventario
     @GetMapping("/decimales-unidad-inventario/{unidadMedida}")
-    public List<String> consultaDecimalesUnidadInventario(@PathVariable String unidadMedida){
+    public List<String> consultaDecimalesUnidadInventario(@PathVariable String unidadMedida) {
         return itemPedidoServiceObj.consultaDecimalesUnidadInventario(unidadMedida);
     }
 
 
     //Consulta descripcion label ext1
     @GetMapping("/consulta-descripcion-label-ext1/{tipoExt}")
-    public List<String> consultaDescripcionLabelExt1(@PathVariable String tipoExt){
+    public List<String> consultaDescripcionLabelExt1(@PathVariable String tipoExt) {
         List<String> listaExt1 = itemPedidoServiceObj.consultaDescripcionLabelExt1(tipoExt);
-        String ext1="";
-        for(String obj : listaExt1){
+        String ext1 = "";
+        for (String obj : listaExt1) {
             ext1 = Character.toUpperCase(obj.charAt(0)) + obj.substring(1, obj.length()).toLowerCase();
         }
-       listaExt1.add(0,ext1);
+        listaExt1.add(0, ext1);
         listaExt1.remove(1);
         return listaExt1;
     }
@@ -178,36 +168,32 @@ public class PedidoController {
 
     //Consulta descripcion label ext2
     @GetMapping("/consulta-descripcion-label-ext2/{tipoExt}")
-    public List<String> consultaDescripcionLabelExt2(@PathVariable String tipoExt){
+    public List<String> consultaDescripcionLabelExt2(@PathVariable String tipoExt) {
         List<String> listaExt2 = itemPedidoServiceObj.consultaDescripcionLabelExt2(tipoExt);
-        String ext2="";
-        for(String obj : listaExt2){
+        String ext2 = "";
+        for (String obj : listaExt2) {
             ext2 = Character.toUpperCase(obj.charAt(0)) + obj.substring(1, obj.length()).toLowerCase();
         }
-        listaExt2.add(0,ext2);
+        listaExt2.add(0, ext2);
         listaExt2.remove(1);
         return listaExt2;
     }
 
 
-
     // Obtener Bodega Item
     @GetMapping("/obtener-bodega-item/{idItem}")
-    public List <String> obtenerBodegaItem(@PathVariable String idItem) throws SQLException {
+    public List<String> obtenerBodegaItem(@PathVariable String idItem) throws SQLException {
         List<String> listaBodegaItem = new ArrayList<>();
         listaBodegaItem.add(unoEEServiceObj.obtenerBodegaItem(Integer.parseInt(idItem)));
         return listaBodegaItem;
     }
 
 
-
     //Conteo sobre si existe un item duplicado homologado
     @GetMapping("/contar-homologar-item-duplicado/{nit}/{codCliente}")
-    public List<String> contarHomologarItemDuplicado(@PathVariable String nit, @PathVariable String codCliente){
+    public List<String> contarHomologarItemDuplicado(@PathVariable String nit, @PathVariable String codCliente) {
         return itemPedidoServiceObj.contarHomologarItemDuplicado("890924167", codCliente);
     }
-
-
 
 
     // Guardar el pedido borrador en la base de datos
@@ -220,7 +206,7 @@ public class PedidoController {
         Map<String, Object> response = new HashMap<>();
 
         // Se revisan los errores
-        if (result.hasErrors()){
+        if (result.hasErrors()) {
             System.out.println("han ocurrido errores");
 
             List<String> errors = result.getFieldErrors()
@@ -232,7 +218,7 @@ public class PedidoController {
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
         }
 
-        try{
+        try {
             //Se guarda el pedido en la base de datos
             System.out.println("**********************************************");
             System.out.println("Este es el borrador a crear " + pedido.toString());
@@ -242,9 +228,8 @@ public class PedidoController {
             pedido.setFechaPedido(new Date());
 
 
-
             pedidoNuevo = pedidoServiceObj.save(pedido);
-        } catch(DataAccessException e){
+        } catch (DataAccessException e) {
             System.out.println("existe un error para guardar en la BD");
             response.put("mensaje", "Error al realizar la creacion del pedido en la BD");
             response.put("error", e.getMessage() + " : " + e.getMostSpecificCause());
@@ -252,29 +237,34 @@ public class PedidoController {
         }
 
         response.put("mensaje", "El borrador del pedido ha sido creado con exito");
-        response.put("nuevoId", pedidoNuevo.getId()+""); // envia el id que se genera despues de guardar en la BD
+        response.put("nuevoId", pedidoNuevo.getId() + ""); // envia el id que se genera despues de guardar en la BD
 
         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
     }
 
 
-
     //Obtener datos del asesor UnoEE
     @GetMapping("/obtener-datos-asesor-unoee/{idSucursal}/{nit}")
     public List<String> obtenerDatosAsesorUnoEE(@PathVariable String idSucursal, @PathVariable String nit) throws SQLException {
-        return unoEEServiceObj.obtenerDatosAsesorUnoEE(idSucursal,nit);
+        return unoEEServiceObj.obtenerDatosAsesorUnoEE(idSucursal, nit);
     }
 
 
+    //Obtener el conector a partir del id del pedido
+    @GetMapping("/obtener-conector/{idPedido}")
+    public List<String> obtenerConectorPedido(@PathVariable String idPedido) throws Exception {
+        List<String> listapvstrDatos = pedidoServiceObj.obtenerConectorPedido(idPedido);
 
+        String pvstrDatos = "";
 
+        for (String obj : listapvstrDatos){
+            pvstrDatos += obj;
+        }
+        System.out.println("aqui muestra");
 
-
-
-
-
-
-
+        pedidoServiceObj.ejecucionWS(pvstrDatos);
+        return null;
+    }
 
 
 

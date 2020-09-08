@@ -22,6 +22,10 @@ public interface PedidoService {
 
     String obtenerPuntoEnvio(String nit, String idSucursal, String idPuntoEnvio);
 
+    List<String> obtenerConectorPedido(String idPedido);
+
+    void ejecucionWS(String pvstrDatos);
+
 
 
 

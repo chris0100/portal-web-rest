@@ -21,6 +21,9 @@ public interface PedidoRepository extends CrudRepository<Pedido,Long> {
     @Query(value = "exec dbo.sp_obtener_punto_envio ?1,?2,?3", nativeQuery = true)
     String puntoEnvio(String nit, String idSucursal, String idPuntoEnvio);
 
+    @Query(value = "exec dbo.sp_conector_pedido ?1", nativeQuery = true)
+    List<String> obtenerConectorPedido(String idPedido);
+
 
 
 }
