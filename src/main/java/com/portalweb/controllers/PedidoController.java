@@ -252,8 +252,10 @@ public class PedidoController {
 
 
     //Obtener el conector a partir del id del pedido
-    @GetMapping("/obtener-conector")
+    @PostMapping("/obtener-conector")
     public List<String> obtenerConectorPedido(@Valid @RequestBody Pedido pedido) throws Exception {
+
+        System.out.println("aqui ingresa el pedido " + pedido);
 
         //Obtiene el conector en forma de lista y lo convierte a un solo string
         List<String> listapvstrDatos = pedidoServiceObj.obtenerConectorPedido(pedido.getId().toString());
@@ -264,11 +266,7 @@ public class PedidoController {
         }
 
         //Ejecuta el WebService
-        pedidoServiceObj.ejecucionWS(pvstrDatos);
-
-
-
-
+        pedidoServiceObj.ejecucionWS(pvstrDatos, pedido);
         return null;
     }
 

@@ -24,7 +24,7 @@ public interface PedidoService {
 
     List<String> obtenerConectorPedido(String idPedido);
 
-    void ejecucionWS(String pvstrDatos);
+    List<String> ejecucionWS(String pvstrDatos, Pedido pedido);
 
 
 

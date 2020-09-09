@@ -12,12 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.xml.rpc.holders.ShortHolder;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Service
-public class PedidoServiceImpl implements PedidoService{
+public class PedidoServiceImpl implements PedidoService {
 
     @Autowired
     private PedidoRepository pedidoRepositoryObj;
@@ -70,7 +72,7 @@ public class PedidoServiceImpl implements PedidoService{
 
     @Override
     public String obtenerPuntoEnvio(String nit, String idSucursal, String idPuntoEnvio) {
-        return pedidoRepositoryObj.puntoEnvio(nit,idSucursal,idPuntoEnvio);
+        return pedidoRepositoryObj.puntoEnvio(nit, idSucursal, idPuntoEnvio);
     }
 
     @Override
@@ -79,10 +81,9 @@ public class PedidoServiceImpl implements PedidoService{
     }
 
 
-
     // Ejecutar el WebService
     @Override
-    public void ejecucionWS(String pvstrDatos) {
+    public List<String> ejecucionWS(String pvstrDatos, Pedido pedido) {
         ExecutorService executor = Executors.newFixedThreadPool(5);
         executor.submit(() -> {
             try {
@@ -102,14 +103,30 @@ public class PedidoServiceImpl implements PedidoService{
                     valorConector = element.getLength();
                 }
 
-                System.out.println(mensajeConector);
-                System.out.println("**************************************************************");
-                System.out.println(valorConector);
+                // Se ajustan el resto de datos
+                pedido.setEstado((short) 1);
+                pedido.setEstadoWB((short) valorConector);
+                pedido.setMensajeWB(mensajeConector);
+                pedido.setFechaPedido(new Date());
+
+                //se guarda el pedido editado en la BD
+                pedidoRepositoryObj.save(pedido);
+
+
+                //Se organiza la informacion que va a contener el email a enviarse
+
+
+
+                //Se arma la plantilla y se envia el email
+
+
+
             } catch (Exception e) {
                 e.printStackTrace();
-                log.info("error envio web service "+e);
+                log.info("error envio web service " + e);
             }
         });
+        return new ArrayList<>();
     }
 
 }
