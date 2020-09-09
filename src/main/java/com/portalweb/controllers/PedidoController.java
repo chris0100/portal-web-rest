@@ -5,6 +5,7 @@ import com.portalweb.models.Pedido;
 import com.portalweb.services.ItemPedidoService;
 import com.portalweb.services.PedidoService;
 import com.portalweb.services.UnoEEService;
+import com.portalweb.soapunoee.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -251,18 +252,23 @@ public class PedidoController {
 
 
     //Obtener el conector a partir del id del pedido
-    @GetMapping("/obtener-conector/{idPedido}")
-    public List<String> obtenerConectorPedido(@PathVariable String idPedido) throws Exception {
-        List<String> listapvstrDatos = pedidoServiceObj.obtenerConectorPedido(idPedido);
+    @GetMapping("/obtener-conector")
+    public List<String> obtenerConectorPedido(@Valid @RequestBody Pedido pedido) throws Exception {
 
+        //Obtiene el conector en forma de lista y lo convierte a un solo string
+        List<String> listapvstrDatos = pedidoServiceObj.obtenerConectorPedido(pedido.getId().toString());
         String pvstrDatos = "";
 
         for (String obj : listapvstrDatos){
             pvstrDatos += obj;
         }
-        System.out.println("aqui muestra");
 
+        //Ejecuta el WebService
         pedidoServiceObj.ejecucionWS(pvstrDatos);
+
+
+
+
         return null;
     }
 

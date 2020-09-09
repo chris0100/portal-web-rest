@@ -79,12 +79,32 @@ public class PedidoServiceImpl implements PedidoService{
     }
 
 
+
+    // Ejecutar el WebService
     @Override
     public void ejecucionWS(String pvstrDatos) {
         ExecutorService executor = Executors.newFixedThreadPool(5);
         executor.submit(() -> {
             try {
-                ejecutarWebService(pvstrDatos);
+                System.out.println(pvstrDatos);
+
+                String mensajeConector = "";
+                int valorConector = 0;
+
+                WSUNOEESoapProxy proxy = new WSUNOEESoapProxy();
+                ShortHolder holder = new ShortHolder((short) 0);
+                ImportarXMLResponseImportarXMLResult result = proxy.importarXML(pvstrDatos, holder);
+                MessageElement[] elements = result.get_any();
+
+
+                for (MessageElement element : elements) {
+                    mensajeConector += element.getAsString();
+                    valorConector = element.getLength();
+                }
+
+                System.out.println(mensajeConector);
+                System.out.println("**************************************************************");
+                System.out.println(valorConector);
             } catch (Exception e) {
                 e.printStackTrace();
                 log.info("error envio web service "+e);
@@ -92,18 +112,4 @@ public class PedidoServiceImpl implements PedidoService{
         });
     }
 
-
-
-    public void ejecutarWebService(String pvstrDatos) throws Exception{
-        System.out.println(pvstrDatos);
-        WSUNOEESoapProxy proxy = new WSUNOEESoapProxy();
-        ShortHolder holder = new ShortHolder((short) 0);
-        ImportarXMLResponseImportarXMLResult result = proxy.importarXML(pvstrDatos, holder);
-        MessageElement[] elements = result.get_any();
-        System.out.println(pvstrDatos);
-        for (MessageElement element : elements) {
-            log.info(element.getAsString());
-            log.info("numero"+element.getLength());
-        }
-    }
 }

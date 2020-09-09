@@ -7,7 +7,7 @@ import java.rmi.RemoteException;
 
 public class Test {
 
-	public void test() throws RemoteException {
+	public void test() throws Exception {
 
 		System.out.println("**********************");
 
@@ -33,7 +33,8 @@ public class Test {
 		MessageElement[] elements = result.get_any();
 
 		for (MessageElement element : elements) {
-			
+			System.out.println(element.getAsString() + "");
+			System.out.println(element.getLength());
 			System.out.println(element.getElementName());
 		}
 
