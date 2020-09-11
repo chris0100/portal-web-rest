@@ -3,6 +3,7 @@ package com.portalweb.models;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 
 @Entity
@@ -241,4 +242,26 @@ public class Usuario implements Serializable {
 
     public static final long serialVersionUID = 1L;
 
+
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", email='" + email + '\'' +
+                ", nit='" + nit + '\'' +
+                ", descripcionSucursal='" + descripcionSucursal + '\'' +
+                ", idSucursal='" + idSucursal + '\'' +
+                ", cliente='" + cliente + '\'' +
+                ", primerLogin=" + primerLogin +
+                ", intentosBloqueo=" + intentosBloqueo +
+                ", descripcionPuntoEnvio='" + descripcionPuntoEnvio + '\'' +
+                ", idPuntoEnvio='" + idPuntoEnvio + '\'' +
+                ", condicionesRestricciones=" + condicionesRestricciones +
+                ", roles=" + roles +
+                ", rolesPrincipal=" + Arrays.toString(rolesPrincipal) +
+                '}';
+    }
 }

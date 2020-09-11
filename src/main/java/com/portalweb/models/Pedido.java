@@ -98,8 +98,20 @@ public class Pedido implements Serializable {
     private List<ItemPedido> listaItemPedido;
 
 
+    @Transient
+    private String emailAsesor;
+
 
     public Pedido() {
+    }
+
+
+    public String getEmailAsesor() {
+        return emailAsesor;
+    }
+
+    public void setEmailAsesor(String emailAsesor) {
+        this.emailAsesor = emailAsesor;
     }
 
     public List<ItemPedido> getListaItemPedido() {
@@ -272,30 +284,4 @@ public class Pedido implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Override
-    public String toString() {
-        return "Pedido{" +
-                "id=" + id +
-                ", codPedido='" + codPedido + '\'' +
-                ", nota='" + nota + '\'' +
-                ", estado=" + estado +
-                ", fechaPedido=" + fechaPedido +
-                ", totalBruto=" + totalBruto +
-                ", descuentos=" + descuentos +
-                ", impuestos=" + impuestos +
-                ", total=" + total +
-                ", sucursalRemisionar='" + sucursalRemisionar + '\'' +
-                ", sucursalFacturar='" + sucursalFacturar + '\'' +
-                ", terceroVendedor='" + terceroVendedor + '\'' +
-                ", contacto='" + contacto + '\'' +
-                ", direccion='" + direccion + '\'' +
-                ", oc='" + oc + '\'' +
-                ", idUsuario=" + idUsuario +
-                ", terceroAsesor='" + terceroAsesor + '\'' +
-                ", estadoWB=" + estadoWB +
-                ", mensajeWB='" + mensajeWB + '\'' +
-                ", puntoEnvio='" + puntoEnvio + '\'' +
-                ", listaItemPedido=" + listaItemPedido +
-                '}';
-    }
 }

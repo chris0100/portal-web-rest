@@ -3,6 +3,7 @@ package com.portalweb.services;
 
 import com.portalweb.models.ItemPedido;
 import com.portalweb.models.Pedido;
+import com.portalweb.models.Usuario;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public interface PedidoService {
 
     List<String> obtenerConectorPedido(String idPedido);
 
-    List<String> ejecucionWS(String pvstrDatos, Pedido pedido);
+    List<String> ejecucionWS(String pvstrDatos, Pedido pedido, Usuario usuario, List<ItemPedido> listaItemPedido, String emailAsesor);
 
 
 

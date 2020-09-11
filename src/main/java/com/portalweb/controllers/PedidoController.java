@@ -1,7 +1,9 @@
 package com.portalweb.controllers;
 
 
+import com.portalweb.models.ItemPedido;
 import com.portalweb.models.Pedido;
+import com.portalweb.models.Usuario;
 import com.portalweb.services.ItemPedidoService;
 import com.portalweb.services.PedidoService;
 import com.portalweb.services.UnoEEService;
@@ -265,8 +267,18 @@ public class PedidoController {
             pvstrDatos += obj;
         }
 
+        System.out.println("****************");
+        System.out.println(pvstrDatos);  // datos del conector
+
+        //Se localiza la original para editar campos de web services
+        Pedido pedidoBD = pedidoServiceObj.findById(pedido.getId());
+
+        //Obtener usuario y lista
+        Usuario usuarioPedido = pedido.getIdUsuario();
+        List<ItemPedido> listaItemPedidos = pedido.getListaItemPedido();
+
         //Ejecuta el WebService
-        pedidoServiceObj.ejecucionWS(pvstrDatos, pedido);
+        pedidoServiceObj.ejecucionWS(pvstrDatos, pedidoBD, usuarioPedido, listaItemPedidos, pedido.getEmailAsesor());
         return null;
     }
 
