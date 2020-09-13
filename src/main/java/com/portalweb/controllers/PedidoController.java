@@ -199,7 +199,7 @@ public class PedidoController {
     //**********************************************************************
     @GetMapping("/contar-homologar-item-duplicado/{nit}/{codCliente}")
     public List<String> contarHomologarItemDuplicado(@PathVariable String nit, @PathVariable String codCliente) {
-        return itemPedidoServiceObj.contarHomologarItemDuplicado("890924167", codCliente);
+        return itemPedidoServiceObj.contarHomologarItemDuplicado(nit.trim(), codCliente);
     }
 
 
@@ -292,18 +292,35 @@ public class PedidoController {
     // Se realiza el tratamiento de los datos enviados por excel
     @PostMapping("/tratamiento-lista-items-excel")
     public List<String> tratamientoListaItemsExcel(@Valid @RequestBody List<ItemExcel> listaItemsExcel) {
-        System.out.println(listaItemsExcel);
 
         List<String> resultadoBusquedaItems = new ArrayList<>();
 
         //Iteramos sobre la lista, para buscarlo por codigo de barras
         for(ItemExcel obj : listaItemsExcel){
-            String nombreCompletoItem = itemPedidoServiceObj.ItemCodBarras(obj.getCodigoItem());
-            if(nombreCompletoItem.contains("vacio")){
-                resultadoBusquedaItems.add("complementoError");
+
+            //La cantidad que va con el nit, debe ser -1 siempre
+            if (obj.getCantidad() != -1){
+                // Buscar por el itemCodBarras
+                String nombreCompletoItem = itemPedidoServiceObj.ItemCodBarras(obj.getCodigoItem());
+
+                //Si no lo encuentra por ahi, lo busca por cod cliente
+                if (nombreCompletoItem.contains("vacio")){
+                    try{
+                        nombreCompletoItem = itemPedidoServiceObj.contarHomologarItemDuplicado(listaItemsExcel.get(listaItemsExcel.size()-1).getCodigoItem(),
+                                obj.getCodigoItem()).get(0);
+                    }catch (Exception e){
+                        nombreCompletoItem = "vacio:"+obj.getCodigoItem();
+                    }
+                }
+
+                //Si no lo encuentra por ninguno de los dos, crea el error
+                if(nombreCompletoItem.contains("vacio")){
+                    resultadoBusquedaItems.add("complementoError");
+                }
+
+                //Lo añade a la lista
+                resultadoBusquedaItems.add(nombreCompletoItem);
             }
-            resultadoBusquedaItems.add(nombreCompletoItem);
-            System.out.println(nombreCompletoItem);
         }
         return resultadoBusquedaItems;
     }
