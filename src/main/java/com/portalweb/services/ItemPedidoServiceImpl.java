@@ -102,7 +102,7 @@ public class ItemPedidoServiceImpl implements ItemPedidoService{
             return itemPedidoRepositoryObj.obtenerItemCodBarras(codBarras).get(0);
         }
         catch (Exception e){
-            return "vacio";
+            return "vacio:"+codBarras;
         }
 
     }

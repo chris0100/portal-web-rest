@@ -206,6 +206,9 @@ public class PedidoServiceImpl implements PedidoService {
         emailController.generarTemplateAsesor(p1CodigoPedido, p2UsuarioPedido, p6mensajeErrorWb, p4TablaItems, p5PuntoEnvio, p7razonSocialCliente);
         String cuerpo = emailController.getTemplateAsesor();
         System.out.println("prueba para enviar al email del asesor " + emailAsesor);
+        /////////////////////////////////////////////////////////////////////
+        //RECORDAR CAMBIAR AL FINAL PARA QUE ENVIE EL CORREO AL ASESOR
+        /////////////////////////////////////////////////////////////////////
         //emailController.sendMail(emailAsesor, asunto, cuerpo);
     }
 

@@ -299,6 +299,9 @@ public class PedidoController {
         //Iteramos sobre la lista, para buscarlo por codigo de barras
         for(ItemExcel obj : listaItemsExcel){
             String nombreCompletoItem = itemPedidoServiceObj.ItemCodBarras(obj.getCodigoItem());
+            if(nombreCompletoItem.contains("vacio")){
+                resultadoBusquedaItems.add("complementoError");
+            }
             resultadoBusquedaItems.add(nombreCompletoItem);
             System.out.println(nombreCompletoItem);
         }
