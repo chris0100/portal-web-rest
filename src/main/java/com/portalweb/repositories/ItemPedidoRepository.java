@@ -24,8 +24,14 @@ public interface ItemPedidoRepository extends CrudRepository<ItemPedido, Long> {
     List<String> listaItemPatron();
 
 
+    // Consulta si el item es homologado
     @Query(value = "exec dbo.sp_homologar_cod_cliente ?1, ?2", nativeQuery = true)
     List<String> contarHomologarItemDuplicado(String nit, String codigoCliente);
+
+
+    //Consulta el item por codigo de barras
+    @Query(value = "exec dbo.sp_obtener_item_cod_barras ?1", nativeQuery = true)
+    List<String> obtenerItemCodBarras(String codBarras);
 
 
 }

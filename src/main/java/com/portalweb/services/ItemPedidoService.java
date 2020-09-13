@@ -34,4 +34,6 @@ public interface ItemPedidoService {
 
     List<String> contarHomologarItemDuplicado(String nit, String codCliente);
 
+    String ItemCodBarras(String codBarras);
+
 }

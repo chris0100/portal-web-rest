@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.mail.FetchProfile;
 import javax.xml.rpc.holders.ShortHolder;
@@ -207,13 +208,6 @@ public class PedidoServiceImpl implements PedidoService {
         System.out.println("prueba para enviar al email del asesor " + emailAsesor);
         //emailController.sendMail(emailAsesor, asunto, cuerpo);
     }
-
-
-
-
-
-
-
 
 
 

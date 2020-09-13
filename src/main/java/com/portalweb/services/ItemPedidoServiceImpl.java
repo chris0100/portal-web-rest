@@ -94,4 +94,16 @@ public class ItemPedidoServiceImpl implements ItemPedidoService{
     public List<String> contarHomologarItemDuplicado(String nit, String codCliente) {
         return itemPedidoRepositoryObj.contarHomologarItemDuplicado(nit, codCliente);
     }
+
+    //Obtiene el nombre completo obtenido del codigo de barras
+    @Override
+    public String ItemCodBarras(String codBarras) {
+        try{
+            return itemPedidoRepositoryObj.obtenerItemCodBarras(codBarras).get(0);
+        }
+        catch (Exception e){
+            return "vacio";
+        }
+
+    }
 }

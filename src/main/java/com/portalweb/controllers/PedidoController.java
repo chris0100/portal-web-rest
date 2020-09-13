@@ -1,6 +1,7 @@
 package com.portalweb.controllers;
 
 
+import com.portalweb.models.ItemExcel;
 import com.portalweb.models.ItemPedido;
 import com.portalweb.models.Pedido;
 import com.portalweb.models.Usuario;
@@ -193,6 +194,9 @@ public class PedidoController {
 
 
     //Conteo sobre si existe un item duplicado homologado
+    //**********************************************************************
+    // RECORDAR CAMBIAR PARA NIT
+    //**********************************************************************
     @GetMapping("/contar-homologar-item-duplicado/{nit}/{codCliente}")
     public List<String> contarHomologarItemDuplicado(@PathVariable String nit, @PathVariable String codCliente) {
         return itemPedidoServiceObj.contarHomologarItemDuplicado("890924167", codCliente);
@@ -281,6 +285,26 @@ public class PedidoController {
         pedidoServiceObj.ejecucionWS(pvstrDatos, pedidoBD, usuarioPedido, listaItemPedidos, pedido.getEmailAsesor());
         return null;
     }
+
+
+
+
+    // Se realiza el tratamiento de los datos enviados por excel
+    @PostMapping("/tratamiento-lista-items-excel")
+    public List<String> tratamientoListaItemsExcel(@Valid @RequestBody List<ItemExcel> listaItemsExcel) {
+        System.out.println(listaItemsExcel);
+
+        List<String> resultadoBusquedaItems = new ArrayList<>();
+
+        //Iteramos sobre la lista, para buscarlo por codigo de barras
+        for(ItemExcel obj : listaItemsExcel){
+            String nombreCompletoItem = itemPedidoServiceObj.ItemCodBarras(obj.getCodigoItem());
+            resultadoBusquedaItems.add(nombreCompletoItem);
+            System.out.println(nombreCompletoItem);
+        }
+        return resultadoBusquedaItems;
+    }
+
 
 
 
