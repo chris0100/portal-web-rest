@@ -27,6 +27,8 @@ public interface PedidoService {
 
     List<String> ejecucionWS(String pvstrDatos, Pedido pedido, Usuario usuario, List<ItemPedido> listaItemPedido, String emailAsesor);
 
+    void deletePedidoBorradorById(Long id);
+
 
 
 

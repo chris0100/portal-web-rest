@@ -213,6 +213,9 @@ public class PedidoServiceImpl implements PedidoService {
     }
 
 
-
-
+    // Eliminar pedido en borrador
+    @Override
+    public void deletePedidoBorradorById(Long id) {
+        pedidoRepositoryObj.deleteById(id);
+    }
 }

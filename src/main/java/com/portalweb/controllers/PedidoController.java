@@ -327,6 +327,22 @@ public class PedidoController {
 
 
 
+    //Eliminar un pedido en borrador
+    @DeleteMapping("/eliminar-pedido-borrador/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id){
+        pedidoServiceObj.deletePedidoBorradorById(id);
+    }
+
+
+
+
+
+
+
+
+
+
 
 
 }
