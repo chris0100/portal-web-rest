@@ -106,4 +106,11 @@ public class ItemPedidoServiceImpl implements ItemPedidoService{
         }
 
     }
+
+
+    //Borra el item de un borrador
+    @Override
+    public void deleteItemBorrador(Long id) {
+        itemPedidoRepositoryObj.deleteById(id);
+    }
 }

@@ -36,4 +36,6 @@ public interface ItemPedidoService {
 
     String ItemCodBarras(String codBarras);
 
+    void deleteItemBorrador(Long id);
+
 }

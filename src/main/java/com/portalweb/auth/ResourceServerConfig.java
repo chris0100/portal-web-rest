@@ -38,7 +38,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .permitAll()
                 .antMatchers(HttpMethod.POST, "/crear-usuario/**", "/add-pedido-borrador")
                 .permitAll()
-                .antMatchers(HttpMethod.DELETE, "/eliminar-pedido-borrador/**")
+                .antMatchers(HttpMethod.DELETE, "/eliminar-pedido-borrador/**", "/eliminar-item-borrador/**")
                 .permitAll()
                 /*.antMatchers(HttpMethod.GET, "").hasAnyRole("USER","ADMIN")
                 .antMatchers(HttpMethod.POST, "").hasAnyRole("USER","ADMIN")
