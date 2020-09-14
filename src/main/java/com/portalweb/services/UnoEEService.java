@@ -3,6 +3,7 @@ package com.portalweb.services;
 import com.portalweb.controllers.ItemPedidoUnoEEController;
 import com.portalweb.controllers.PedidoUnoeeController;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -18,4 +19,16 @@ public interface UnoEEService {
     String obtenerBodegaItem(int idItem) throws SQLException;
 
     List<String> obtenerDatosAsesorUnoEE(String idSucursal, String nit) throws SQLException;
+
+    List<String> obtenerListaExt1(int codItem) throws SQLException;
+
+    List<String> obtenerListaExt2(int codItem) throws SQLException;
+
+    List<String> obtenerDatosItem(int codItem) throws SQLException;
+
+    List<String> obtenerDatosItemCompleto(int codItem, String ext1, String ext2) throws SQLException;
+
+    BigDecimal obtenerDisponibleItemCompleto(int codItem, String ext1, String ext2) throws SQLException;
+
+    BigDecimal obtenerDisponibleItem(int codItem) throws  SQLException;
 }

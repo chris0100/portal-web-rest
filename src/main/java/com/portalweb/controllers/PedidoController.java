@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -340,6 +341,65 @@ public class PedidoController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteItemBorrador(@PathVariable Long id){
         itemPedidoServiceObj.deleteItemBorrador(id);
+    }
+
+
+
+    //Consultar lista ext1 - se usa en ventana validar item creado - para ese respectivo coditem
+    @GetMapping("/obtener-lista-ext1/{codItem}")
+    public List<String> obtenerListaExt1(@PathVariable int codItem) throws SQLException {
+        return unoEEServiceObj.obtenerListaExt1(codItem);
+    }
+
+
+
+    //Consultar lista ext2 - se usa en ventana validar item creado - para ese respectivo coditem
+    @GetMapping("/obtener-lista-ext2/{codItem}")
+    public List<String> obtenerListaExt2(@PathVariable int codItem) throws SQLException {
+        return unoEEServiceObj.obtenerListaExt2(codItem);
+    }
+
+
+
+
+    //Obtener datos del item - se usa en ventana validar item creado
+    @GetMapping("/obtener-datos-item/{codItem}")
+    public List<String> obtenerDatosItem(@PathVariable int codItem) throws SQLException {
+        return unoEEServiceObj.obtenerDatosItem(codItem);
+    }
+
+
+
+
+    //Obtener datos del item con codItem,ext1,ext2 - se usa en ventana validar item
+    @GetMapping("/obtener-datos-item/{codItem}/{ext1}/{ext2}")
+    public List<String> obtenerDatosItemCompleto(@PathVariable int codItem,
+                                                 @PathVariable String ext1,
+                                                 @PathVariable String ext2) throws SQLException {
+        return unoEEServiceObj.obtenerDatosItemCompleto(codItem,ext1,ext2);
+    }
+
+
+
+    //Obtener disponible item 3 params
+    @GetMapping("/obtener-disponible-item/{codItem}/{ext1}/{ext2}")
+    public List<String> obtenerDiponibleItem(@PathVariable int codItem,
+                                             @PathVariable String ext1,
+                                             @PathVariable String ext2) throws SQLException {
+        List<String> resultado = new ArrayList<>();
+        resultado.add(unoEEServiceObj.obtenerDisponibleItemCompleto(codItem,ext1,ext2)+"");
+        return resultado;
+    }
+
+
+
+
+    //Obtener disponible item 1 param
+    @GetMapping("/obtener-disponible-item/{codItem}")
+    public List<String> obtenerDiponibleItem(@PathVariable int codItem) throws SQLException {
+        List<String> resultado = new ArrayList<>();
+        resultado.add(unoEEServiceObj.obtenerDisponibleItem(codItem)+"");
+        return resultado;
     }
 
 

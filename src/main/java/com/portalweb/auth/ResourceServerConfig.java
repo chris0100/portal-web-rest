@@ -32,7 +32,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                         "/tipo-extensiones/**", "/ext1/**" ,"/ext2/**", "/unidad-inventario/**", "/decimales-unidad-inventario/**",
                         "/consulta-descripcion-label-ext1/**", "/consulta-descripcion-label-ext2/**", "/obtener-bodega-item/**" ,
                         "/contar-homologar-item-duplicado/**", "/obtener-datos-asesor-unoee/**", "/obtener-conector",
-                        "/tratamiento-lista-items-excel")
+                        "/tratamiento-lista-items-excel", "/obtener-lista-ext1/**", "/obtener-lista-ext2/**", "/obtener-datos-item/**",
+                        "/obtener-disponible-item/**")
                 .permitAll()
                 .antMatchers(HttpMethod.PUT, "/update-cliente/**", "/update-pass-cliente/**","/editar-otro-usuario/**","/update-pass-otro-usuario/**")
                 .permitAll()
@@ -47,7 +48,6 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and().cors().configurationSource(corsConfigurationSource());
     }
-
 
 
 

@@ -6,12 +6,13 @@ import com.portalweb.repositories.UnoEERepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class UnoEEServiceImpl implements UnoEEService{
+public class UnoEEServiceImpl implements UnoEEService {
 
     @Autowired
     private UnoEERepository unoEERepositoryObj;
@@ -66,12 +67,10 @@ public class UnoEEServiceImpl implements UnoEEService{
                 return null;
             }
             return listaPedidosUnoEE;
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             System.out.println("error " + e);
             return null;
-        }
-        finally {
+        } finally {
             if (stmt != null) {
                 stmt.close();
             }
@@ -112,18 +111,15 @@ public class UnoEEServiceImpl implements UnoEEService{
                 return null;
             }
             return listaItemPedidosUnoEE;
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             System.out.println("error " + e);
             return null;
-        }
-        finally {
+        } finally {
             if (stmt != null) {
                 stmt.close();
             }
         }
     }
-
 
 
     // Obtener la bodega a la cual pertenece el item
@@ -162,9 +158,9 @@ public class UnoEEServiceImpl implements UnoEEService{
         Connection con = DriverManager.getConnection(connectionUrl);
         Statement stmt = null;
 
-        String nombreAsesor="";
-        String correoAsesor="";
-        String nitAsesor="";
+        String nombreAsesor = "";
+        String correoAsesor = "";
+        String nitAsesor = "";
 
         //Query que obtiene los datos del asesor.
         String query = "Select top 1 t200asesor.f200_nit nit_asesor, t015asesor.f015_email correo_asesor ,t200asesor.f200_razon_social nombre_asesor From UnoEE.dbo.t200_mm_terceros f inner join UnoEE.dbo.t204_mm_planes_criterios t204asesor on t204asesor.f204_id  = '005' left	join  UnoEE.dbo.t207_mm_criterios_clientes t207asesor on f207_id_cia = 1 and t207asesor.f207_rowid_tercero = f.f200_rowid  and  t207asesor.f207_id_sucursal = '" + idSucursal + "' and	 t207asesor.f207_id_plan_criterios = f204_id left	join  UnoEE.dbo.t206_mm_criterios_mayores t206asesor on f206_id_cia =1 		and	 t206asesor.f206_id_plan = f207_id_plan_criterios and	 t206asesor.f206_id = f207_id_criterio_mayor inner join  UnoEE.dbo.t200_mm_terceros t200asesor on t200asesor.f200_nit = convert(varchar,(convert(int, left (f206_descripcion, patindex('%[^0-9]%',f206_descripcion +' ')-1)))) inner join  UnoEE.dbo.t015_mm_contactos t015asesor on t200asesor.f200_rowid_contacto = t015asesor.f015_rowid where f.f200_nit = '" + nit + "'";
@@ -195,7 +191,184 @@ public class UnoEEServiceImpl implements UnoEEService{
     }
 
 
+    //Obtiene la lista ext1.
+    @Override
+    public List<String> obtenerListaExt1(int codItem) throws SQLException {
+        String connectionUrl = "jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=UnoEE;user=bd_eureka;password=Desarrollos478#";
+        Connection con = DriverManager.getConnection(connectionUrl);
+        Statement stmt = null;
+
+        List<String> listaExt1Consulta = new ArrayList<>();
+
+        String query = "SELECT DISTINCT [f117_id] +' - '+ [f117_descripcion] ext1 FROM [UnoEE].[dbo].[t117_mc_extensiones1_detalle] inner join v121 on v121.v121_id_ext1_detalle = f117_id and v121.v121_id_extension1 = f117_id_extension1 where v121.v121_id_item = " + codItem;
+        try {
+            stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                listaExt1Consulta.add(rs.getString("ext1"));
+            }
+            return listaExt1Consulta;
+        } catch (SQLException e) {
+            System.out.println("error " + e);
+            return new ArrayList<>();
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
 
 
+    //Obtiene la lista ext2
+    @Override
+    public List<String> obtenerListaExt2(int codItem) throws SQLException {
+        String connectionUrl = "jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=UnoEE;user=bd_eureka;password=Desarrollos478#";
+        Connection con = DriverManager.getConnection(connectionUrl);
+        Statement stmt = null;
 
+        //Se instancia lista de resultado
+        List<String> listaExt2Consulta = new ArrayList<>();
+
+        String query = "SELECT DISTINCT [f119_id] +' - '+ [f119_descripcion] ext2 FROM [UnoEE].[dbo].[t119_mc_extensiones2_detalle] inner join v121 on v121.v121_id_ext2_detalle = f119_id and v121.v121_id_extension2 = f119_id_extension2 where v121.v121_id_item = " + codItem;
+        try {
+            stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                listaExt2Consulta.add(rs.getString("ext2"));
+            }
+            return listaExt2Consulta;
+        } catch (SQLException e) {
+            System.out.println("error " + e);
+            return new ArrayList<>();
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
+
+
+    //Obtener datos del item
+    @Override
+    public List<String> obtenerDatosItem(int codItem) throws SQLException {
+        String connectionUrl = "jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=UnoEE;user=bd_eureka;password=Desarrollos478#";
+        Connection con = DriverManager.getConnection(connectionUrl);
+        Statement stmt = null;
+
+        //descripcion(0)
+        //referencia(1)
+        //undInventario(2)
+        //undOrden(3)
+        //codBarra(4)
+        List<String> datosResultado = new ArrayList<>();
+
+        String query = "select v121_descripcion, v121_referencia, v121_id_unidad_inventario, v121_id_unidad_orden, v121_id_barras_principal from UnoEE.dbo.v121 where v121_id_item = " + codItem + "and v121_id_cia = '001'";
+
+        try {
+            stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                datosResultado.add(rs.getString("v121_descripcion"));
+                datosResultado.add(rs.getString("v121_referencia"));
+                datosResultado.add(rs.getString("v121_id_unidad_inventario"));
+                datosResultado.add(rs.getString("v121_id_unidad_orden"));
+                datosResultado.add(rs.getString("v121_id_barras_principal"));
+            }
+            return datosResultado;
+        } catch (SQLException e) {
+            System.out.println("error " + e);
+            return new ArrayList<>();
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
+
+
+    @Override
+    public List<String> obtenerDatosItemCompleto(int codItem, String ext1, String ext2) throws SQLException {
+        String connectionUrl ="jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=UnoEE;user=bd_eureka;password=Desarrollos478#";
+        Connection con = DriverManager.getConnection(connectionUrl);
+        Statement stmt = null;
+
+        //descripcion(0)
+        //referencia(1)
+        //undInventario(2)
+        //undOrden(3)
+        //codBarra(4)
+        List<String> datosResultado = new ArrayList<>();
+
+        String query = "select v121_descripcion, v121_referencia, v121_id_unidad_inventario, v121_id_unidad_orden, v121_id_barras_principal from UnoEE.dbo.v121 where v121_id_item = "+codItem+" and v121_id_ext1_detalle = '"+ext1+"' and v121_id_ext2_detalle = '"+ext2+"' and v121_id_cia = '001'";
+
+
+        try {
+            stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                datosResultado.add(rs.getString("v121_descripcion"));
+                datosResultado.add(rs.getString("v121_referencia"));
+                datosResultado.add(rs.getString("v121_id_unidad_inventario"));
+                datosResultado.add(rs.getString("v121_id_unidad_orden"));
+                datosResultado.add(rs.getString("v121_id_barras_principal"));
+            }
+            return datosResultado;
+        } catch (SQLException e ) {
+            System.out.println("error "+e);
+            return new ArrayList<>();
+        } finally {
+            if (stmt != null) { stmt.close(); }
+        }
+    }
+
+
+    //Obtiene la cantidad disponible del item
+    @Override
+    public BigDecimal obtenerDisponibleItemCompleto(int codItem, String ext1, String ext2) throws SQLException {
+        String connectionUrl ="jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=UnoEE;user=bd_eureka;password=Desarrollos478#";
+        Connection con = DriverManager.getConnection(connectionUrl);
+        Statement stmt = null;
+
+        BigDecimal disponible = new BigDecimal(0);
+
+        String query = "SELECT sum(v400_cant_disponible_1-v400_cant_pendiente_salir_1) disponible_real FROM [UnoEE].[dbo].[v400_item_ext] v400 inner join [UnoEE].[dbo].[t150_mc_bodegas] t150 on v400.v400_rowid_bodega = t150.f150_rowid inner join [UnoEE].[dbo].v121 on v121.v121_rowid_item_ext = v400_rowid_item_ext where v121.v121_id_item = "+codItem+" and v121.v121_id_ext1_detalle = '"+ext1+"' and v121.v121_id_ext2_detalle = '"+ext2+"' and v121.v121_id_cia = '001' and (t150.f150_id = '001' or t150.f150_id = '002')";
+        try {
+            stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                disponible = rs.getBigDecimal("disponible_real");
+            }
+            return disponible;
+        } catch (SQLException e ) {
+            System.out.println("error "+e);
+        } finally {
+            if (stmt != null) { stmt.close(); }
+        }
+        return null;
+    }
+
+
+    @Override
+    public BigDecimal obtenerDisponibleItem(int codItem) throws SQLException {
+        String connectionUrl ="jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=UnoEE;user=bd_eureka;password=Desarrollos478#";
+        Connection con = DriverManager.getConnection(connectionUrl);
+        Statement stmt = null;
+
+        BigDecimal disponible = new BigDecimal(0);
+
+        String query = "SELECT sum(v400_cant_disponible_1-v400_cant_pendiente_salir_1) disponible_real FROM [UnoEE].[dbo].[v400_item_ext] v400 inner join [UnoEE].[dbo].[t150_mc_bodegas] t150 on v400.v400_rowid_bodega = t150.f150_rowid inner join [UnoEE].[dbo].v121 on v121.v121_rowid_item_ext = v400_rowid_item_ext where v121.v121_id_item = "+codItem +"and v121.v121_id_cia = '001' and (t150.f150_id = '001' or t150.f150_id = '002')";
+        try {
+            stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                disponible = rs.getBigDecimal("disponible_real");
+            }
+            return disponible;
+        } catch (SQLException e ) {
+            System.out.println("error "+e);
+        } finally {
+            if (stmt != null) { stmt.close(); }
+        }
+        return null;
+    }
 }
