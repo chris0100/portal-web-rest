@@ -29,6 +29,10 @@ public interface PedidoService {
 
     void deletePedidoBorradorById(Long id);
 
+    List<Pedido> obtenerPedidoEstadoAsesor(String terceroAsesor);
+
+    List<Pedido> obtenerPedidoEstado();
+
 
 
 

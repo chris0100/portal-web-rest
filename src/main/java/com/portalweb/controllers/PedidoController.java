@@ -404,6 +404,27 @@ public class PedidoController {
 
 
 
+    //*************************************************
+    //MANEJO DE LISTAS DE ERRORES********************************
+    //*************************************************
+
+    //Obtener lista Pedido error asesor
+    @GetMapping("/obtener-lista-pedido-error-asesor/{nit}")
+    public List<Pedido> obtenerListaPedidoErrorAsesor(@PathVariable String nit){
+        return pedidoServiceObj.obtenerPedidoEstadoAsesor(nit);
+    }
+
+
+    //Obtener lista Pedido error
+    @GetMapping("/obtener-lista-pedido-error")
+    public List<Pedido> obtenerListaPedidoError(){
+        return pedidoServiceObj.obtenerPedidoEstado();
+    }
+
+    //*************************************************
+    //MANEJO DE LISTAS DE ERRORES********************************
+    //*************************************************
+
 
 
 

@@ -24,6 +24,9 @@ public interface PedidoRepository extends CrudRepository<Pedido,Long> {
     @Query(value = "exec dbo.sp_conector_pedido ?1", nativeQuery = true)
     List<String> obtenerConectorPedido(String idPedido);
 
+    List<Pedido> findAllByEstadoWBAndTerceroAsesorOrderByFechaPedido(short estadoWB, String terceroAsesor);
+
+    List<Pedido> findAllByEstadoWB(short estadoWB);
 
 
 }

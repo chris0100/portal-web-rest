@@ -218,4 +218,19 @@ public class PedidoServiceImpl implements PedidoService {
     public void deletePedidoBorradorById(Long id) {
         pedidoRepositoryObj.deleteById(id);
     }
+
+
+
+    //Obtener listado pedidos error asesor
+    @Override
+    public List<Pedido> obtenerPedidoEstadoAsesor(String terceroAsesor) {
+        return pedidoRepositoryObj.findAllByEstadoWBAndTerceroAsesorOrderByFechaPedido((short) 1, terceroAsesor);
+    }
+
+
+    //Obtener listado pedidos error
+    @Override
+    public List<Pedido> obtenerPedidoEstado() {
+        return pedidoRepositoryObj.findAllByEstadoWB((short) 1);
+    }
 }
