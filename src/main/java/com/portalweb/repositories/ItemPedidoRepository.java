@@ -33,5 +33,13 @@ public interface ItemPedidoRepository extends CrudRepository<ItemPedido, Long> {
     @Query(value = "exec dbo.sp_obtener_item_cod_barras ?1", nativeQuery = true)
     List<String> obtenerItemCodBarras(String codBarras);
 
+    // Ejecucion del procedimiento ejecutar sincronizar items
+    @Query(value="exec dbo.sp_sincronizar_item ?1, ?2", nativeQuery = true)
+    public void sincronizarItems(String idPedido, String nit);
+
+    //Obtener precio item ecuador
+    @Query(value = "exec dbo.sp_obtener_precio_item_ecuador ?1, ?2, ?3", nativeQuery = true)
+    List<String> obtenerPrecioItemEcuador(String codItem, String nit, String unidadMedia);
+
 
 }

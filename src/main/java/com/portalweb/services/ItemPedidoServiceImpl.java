@@ -113,4 +113,19 @@ public class ItemPedidoServiceImpl implements ItemPedidoService{
     public void deleteItemBorrador(Long id) {
         itemPedidoRepositoryObj.deleteById(id);
     }
+
+
+
+    //Ejecutar procedimiento sincronizar items
+    @Override
+    public void ejecutarSincronizarItems(String idPedido, String nit) {
+        itemPedidoRepositoryObj.sincronizarItems(idPedido, nit);
+    }
+
+
+    //Obtener precioItemEcuador
+    @Override
+    public List<String> obtenerPrecioItemEcuador(String codItem, String nit, String unidadMedia) {
+        return itemPedidoRepositoryObj.obtenerPrecioItemEcuador(codItem.trim(),nit,unidadMedia);
+    }
 }

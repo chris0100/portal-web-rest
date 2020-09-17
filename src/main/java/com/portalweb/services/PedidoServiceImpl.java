@@ -224,13 +224,13 @@ public class PedidoServiceImpl implements PedidoService {
     //Obtener listado pedidos error asesor
     @Override
     public List<Pedido> obtenerPedidoEstadoAsesor(String terceroAsesor) {
-        return pedidoRepositoryObj.findAllByEstadoWBAndTerceroAsesorOrderByFechaPedido((short) 1, terceroAsesor);
+        return pedidoRepositoryObj.findAllByEstadoWBAndTerceroAsesorOrderByFechaPedidoDesc((short) 1, terceroAsesor);
     }
 
 
     //Obtener listado pedidos error
     @Override
     public List<Pedido> obtenerPedidoEstado() {
-        return pedidoRepositoryObj.findAllByEstadoWB((short) 1);
+        return pedidoRepositoryObj.findAllByEstadoWBOrderByFechaPedidoDesc((short) 1);
     }
 }

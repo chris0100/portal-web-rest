@@ -38,4 +38,8 @@ public interface ItemPedidoService {
 
     void deleteItemBorrador(Long id);
 
+    void ejecutarSincronizarItems(String idPedido, String nit);
+
+    List<String> obtenerPrecioItemEcuador(String codItem, String nit, String unidadMedia);
+
 }

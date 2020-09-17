@@ -204,6 +204,8 @@ public class PedidoController {
     }
 
 
+
+
     // Guardar el pedido borrador en la base de datos
     @PostMapping("/add-pedido-borrador")
     @ResponseStatus(HttpStatus.CREATED)
@@ -421,9 +423,54 @@ public class PedidoController {
         return pedidoServiceObj.obtenerPedidoEstado();
     }
 
+
+
+
+    //Realizar sincronizacion de items del pedido
+    @GetMapping("/sincronizar-items/{idPedido}/{nit}")
+    public List<String> ejecutarSincronizarItems(@PathVariable String idPedido, @PathVariable String nit){
+        List<String> listado = new ArrayList<>();
+
+        try{
+            itemPedidoServiceObj.ejecutarSincronizarItems(idPedido, nit);
+            listado.add("Ejecución realizada satisfactoriamente");
+        }catch(Exception e){
+            listado.add("Ejecución realizada satisfactoriamente");
+        }
+        //Se ejecuta el procedimiento
+
+
+        return listado;
+    }
+
+
+    // Obtener Bodega Item
+    @GetMapping("/sincronizar-bodega-item/{idItem}/{codItem}")
+    public List<String> sincronizarBodegaItem(@PathVariable Long idItem, @PathVariable String codItem) throws SQLException {
+        String idBodega = "";
+        idBodega = unoEEServiceObj.obtenerBodegaItem(Integer.parseInt(codItem));
+        ItemPedido item = itemPedidoServiceObj.findById(idItem);
+        item.setIdBodega(idBodega);
+        System.out.println(item);
+        System.out.println(idBodega);
+        itemPedidoServiceObj.saveItem(item);
+        return new ArrayList<>();
+    }
+
+
+    // Sincronizar precion ecuador
+    @GetMapping("/sincronizar-precio-ecuador/{idItem}")
+    public List<String> sincronizarPrecioEcuador(@PathVariable Long idItem){
+        ItemPedido item = itemPedidoServiceObj.findById(idItem);
+        return itemPedidoServiceObj.obtenerPrecioItemEcuador(item.getCodItem()+"","1792196841001",item.getUnidadMedida().trim());
+        //item.setPrecioUnitarioUnoee(new BigDecimal());
+    }
     //*************************************************
     //MANEJO DE LISTAS DE ERRORES********************************
     //*************************************************
+
+
+
 
 
 
