@@ -233,4 +233,58 @@ public class PedidoServiceImpl implements PedidoService {
     public List<Pedido> obtenerPedidoEstado() {
         return pedidoRepositoryObj.findAllByEstadoWBOrderByFechaPedidoDesc((short) 1);
     }
+
+
+    //Ejecutar solo webservice para verificacion de errores
+    // Ejecutar el WebService
+    @Override
+    public List<String> ejecucionWSError(String pvstrDatos, Pedido pedido) throws InterruptedException {
+        ExecutorService executor = Executors.newFixedThreadPool(5);
+        List<String> respuesta = new ArrayList<>();
+        executor.submit(() -> {
+            try {
+                System.out.println(pvstrDatos);
+
+                String mensajeConector = "";
+                int valorConector = 0;
+
+                WSUNOEESoapProxy proxy = new WSUNOEESoapProxy();
+                ShortHolder holder = new ShortHolder((short) 0);
+                ImportarXMLResponseImportarXMLResult result = proxy.importarXML(pvstrDatos, holder);
+                MessageElement[] elements = result.get_any();
+
+
+                for (MessageElement element : elements) {
+                    mensajeConector += element.getAsString();
+                    valorConector = element.getLength();
+                }
+                //here
+
+                // Se ajustan el resto de datos
+                pedido.setEstado((short) 1);
+                pedido.setEstadoWB((short) valorConector);
+                pedido.setMensajeWB(mensajeConector);
+                pedido.setFechaPedido(new Date());
+
+
+                //se guarda el pedido editado en la BD
+                pedidoRepositoryObj.save(pedido);
+
+                if(pedido.getEstadoWB() == 1) {
+                    respuesta.add("El pedido no fue creado debido a errores");
+                }
+                else{
+                    respuesta.add("El pedido fue creado exitosamente");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.info("error envio web service " + e);
+            }
+        });
+        // Reloj de espera
+        Thread.sleep(8000);
+        System.out.println("aqui me muestra la respuesta que necesito enviar");
+        System.out.println(respuesta);
+        return respuesta;
+    }
 }

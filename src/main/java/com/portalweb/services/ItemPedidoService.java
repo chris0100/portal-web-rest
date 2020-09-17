@@ -2,6 +2,7 @@ package com.portalweb.services;
 
 import com.portalweb.models.ItemPedido;
 
+import java.util.Date;
 import java.util.List;
 
 public interface ItemPedidoService {
@@ -42,4 +43,5 @@ public interface ItemPedidoService {
 
     List<String> obtenerPrecioItemEcuador(String codItem, String nit, String unidadMedia);
 
+    List<Date> ObtenerFechaPrecioItemEcuador(String codCliente, String nit, String unidadMedida);
 }

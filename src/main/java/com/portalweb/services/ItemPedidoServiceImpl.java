@@ -6,6 +6,7 @@ import com.portalweb.repositories.UnoEERepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -127,5 +128,12 @@ public class ItemPedidoServiceImpl implements ItemPedidoService{
     @Override
     public List<String> obtenerPrecioItemEcuador(String codItem, String nit, String unidadMedia) {
         return itemPedidoRepositoryObj.obtenerPrecioItemEcuador(codItem.trim(),nit,unidadMedia);
+    }
+
+
+    //Obtener fecha precio item ecuador
+    @Override
+    public List<Date> ObtenerFechaPrecioItemEcuador(String codCliente, String nit, String unidadMedida) {
+        return itemPedidoRepositoryObj.obtenerFechaPrecioItemEcuador(codCliente, nit, unidadMedida);
     }
 }

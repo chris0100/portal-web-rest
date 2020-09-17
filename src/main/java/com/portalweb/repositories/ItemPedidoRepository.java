@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -40,6 +41,10 @@ public interface ItemPedidoRepository extends CrudRepository<ItemPedido, Long> {
     //Obtener precio item ecuador
     @Query(value = "exec dbo.sp_obtener_precio_item_ecuador ?1, ?2, ?3", nativeQuery = true)
     List<String> obtenerPrecioItemEcuador(String codItem, String nit, String unidadMedia);
+
+    //Obtener fecha precio item ecuador
+    @Query(value = "exec dbo.sp_obtener_fecha_precio_item_ecuador ?1, ?2, ?3", nativeQuery = true)
+    List<Date> obtenerFechaPrecioItemEcuador(String codItem, String nit, String unidadMedia);
 
 
 }

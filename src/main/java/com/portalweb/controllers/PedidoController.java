@@ -204,8 +204,6 @@ public class PedidoController {
     }
 
 
-
-
     // Guardar el pedido borrador en la base de datos
     @PostMapping("/add-pedido-borrador")
     @ResponseStatus(HttpStatus.CREATED)
@@ -270,7 +268,7 @@ public class PedidoController {
         List<String> listapvstrDatos = pedidoServiceObj.obtenerConectorPedido(pedido.getId().toString());
         String pvstrDatos = "";
 
-        for (String obj : listapvstrDatos){
+        for (String obj : listapvstrDatos) {
             pvstrDatos += obj;
         }
 
@@ -291,6 +289,32 @@ public class PedidoController {
 
 
 
+    //Obtener el conector a partir del id del pedido
+    @PostMapping("/obtener-conector-error")
+    public List<String> obtenerConectorPedidoError(@Valid @RequestBody Pedido pedido) throws Exception {
+
+        System.out.println("aqui ingresa el pedido con el error " + pedido);
+
+        //Obtiene el conector en forma de lista y lo convierte a un solo string
+        List<String> listapvstrDatos = pedidoServiceObj.obtenerConectorPedido(pedido.getId().toString());
+        String pvstrDatos = "";
+
+        for (String obj : listapvstrDatos) {
+            pvstrDatos += obj;
+        }
+
+        System.out.println("****************");
+        System.out.println(pvstrDatos);  // datos del conector
+
+        //Se localiza la original para editar campos de web services
+        Pedido pedidoBD = pedidoServiceObj.findById(pedido.getId());
+
+        //Ejecuta el WebService
+        List<String> respuesta = new ArrayList<>();
+        respuesta = pedidoServiceObj.ejecucionWSError(pvstrDatos, pedidoBD);
+        return respuesta;
+    }
+
 
     // Se realiza el tratamiento de los datos enviados por excel
     @PostMapping("/tratamiento-lista-items-excel")
@@ -299,25 +323,25 @@ public class PedidoController {
         List<String> resultadoBusquedaItems = new ArrayList<>();
 
         //Iteramos sobre la lista, para buscarlo por codigo de barras
-        for(ItemExcel obj : listaItemsExcel){
+        for (ItemExcel obj : listaItemsExcel) {
 
             //La cantidad que va con el nit, debe ser -1 siempre
-            if (obj.getCantidad() != -1){
+            if (obj.getCantidad() != -1) {
                 // Buscar por el itemCodBarras
                 String nombreCompletoItem = itemPedidoServiceObj.ItemCodBarras(obj.getCodigoItem());
 
                 //Si no lo encuentra por ahi, lo busca por cod cliente
-                if (nombreCompletoItem.contains("vacio")){
-                    try{
-                        nombreCompletoItem = itemPedidoServiceObj.contarHomologarItemDuplicado(listaItemsExcel.get(listaItemsExcel.size()-1).getCodigoItem(),
+                if (nombreCompletoItem.contains("vacio")) {
+                    try {
+                        nombreCompletoItem = itemPedidoServiceObj.contarHomologarItemDuplicado(listaItemsExcel.get(listaItemsExcel.size() - 1).getCodigoItem(),
                                 obj.getCodigoItem()).get(0);
-                    }catch (Exception e){
-                        nombreCompletoItem = "vacio:"+obj.getCodigoItem();
+                    } catch (Exception e) {
+                        nombreCompletoItem = "vacio:" + obj.getCodigoItem();
                     }
                 }
 
                 //Si no lo encuentra por ninguno de los dos, crea el error
-                if(nombreCompletoItem.contains("vacio")){
+                if (nombreCompletoItem.contains("vacio")) {
                     resultadoBusquedaItems.add("complementoError");
                 }
 
@@ -329,11 +353,10 @@ public class PedidoController {
     }
 
 
-
     //Eliminar un pedido en borrador
     @DeleteMapping("/eliminar-pedido-borrador/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletePedidoBorrador(@PathVariable Long id){
+    public void deletePedidoBorrador(@PathVariable Long id) {
         pedidoServiceObj.deletePedidoBorradorById(id);
     }
 
@@ -341,10 +364,9 @@ public class PedidoController {
     //Eliminar el item de un borrador
     @DeleteMapping("/eliminar-item-borrador/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteItemBorrador(@PathVariable Long id){
+    public void deleteItemBorrador(@PathVariable Long id) {
         itemPedidoServiceObj.deleteItemBorrador(id);
     }
-
 
 
     //Consultar lista ext1 - se usa en ventana validar item creado - para ese respectivo coditem
@@ -354,14 +376,11 @@ public class PedidoController {
     }
 
 
-
     //Consultar lista ext2 - se usa en ventana validar item creado - para ese respectivo coditem
     @GetMapping("/obtener-lista-ext2/{codItem}")
     public List<String> obtenerListaExt2(@PathVariable int codItem) throws SQLException {
         return unoEEServiceObj.obtenerListaExt2(codItem);
     }
-
-
 
 
     //Obtener datos del item - se usa en ventana validar item creado
@@ -371,16 +390,13 @@ public class PedidoController {
     }
 
 
-
-
     //Obtener datos del item con codItem,ext1,ext2 - se usa en ventana validar item
     @GetMapping("/obtener-datos-item/{codItem}/{ext1}/{ext2}")
     public List<String> obtenerDatosItemCompleto(@PathVariable int codItem,
                                                  @PathVariable String ext1,
                                                  @PathVariable String ext2) throws SQLException {
-        return unoEEServiceObj.obtenerDatosItemCompleto(codItem,ext1,ext2);
+        return unoEEServiceObj.obtenerDatosItemCompleto(codItem, ext1, ext2);
     }
-
 
 
     //Obtener disponible item 3 params
@@ -389,21 +405,18 @@ public class PedidoController {
                                              @PathVariable String ext1,
                                              @PathVariable String ext2) throws SQLException {
         List<String> resultado = new ArrayList<>();
-        resultado.add(unoEEServiceObj.obtenerDisponibleItemCompleto(codItem,ext1,ext2)+"");
+        resultado.add(unoEEServiceObj.obtenerDisponibleItemCompleto(codItem, ext1, ext2) + "");
         return resultado;
     }
-
-
 
 
     //Obtener disponible item 1 param
     @GetMapping("/obtener-disponible-item/{codItem}")
     public List<String> obtenerDiponibleItem(@PathVariable int codItem) throws SQLException {
         List<String> resultado = new ArrayList<>();
-        resultado.add(unoEEServiceObj.obtenerDisponibleItem(codItem)+"");
+        resultado.add(unoEEServiceObj.obtenerDisponibleItem(codItem) + "");
         return resultado;
     }
-
 
 
     //*************************************************
@@ -412,34 +425,30 @@ public class PedidoController {
 
     //Obtener lista Pedido error asesor
     @GetMapping("/obtener-lista-pedido-error-asesor/{nit}")
-    public List<Pedido> obtenerListaPedidoErrorAsesor(@PathVariable String nit){
+    public List<Pedido> obtenerListaPedidoErrorAsesor(@PathVariable String nit) {
         return pedidoServiceObj.obtenerPedidoEstadoAsesor(nit);
     }
 
 
     //Obtener lista Pedido error
     @GetMapping("/obtener-lista-pedido-error")
-    public List<Pedido> obtenerListaPedidoError(){
+    public List<Pedido> obtenerListaPedidoError() {
         return pedidoServiceObj.obtenerPedidoEstado();
     }
 
 
-
-
     //Realizar sincronizacion de items del pedido
     @GetMapping("/sincronizar-items/{idPedido}/{nit}")
-    public List<String> ejecutarSincronizarItems(@PathVariable String idPedido, @PathVariable String nit){
+    public List<String> ejecutarSincronizarItems(@PathVariable String idPedido, @PathVariable String nit) {
         List<String> listado = new ArrayList<>();
 
-        try{
+        try {
+            //Se ejecuta el procedimiento
             itemPedidoServiceObj.ejecutarSincronizarItems(idPedido, nit);
             listado.add("Ejecución realizada satisfactoriamente");
-        }catch(Exception e){
+        } catch (Exception e) {
             listado.add("Ejecución realizada satisfactoriamente");
         }
-        //Se ejecuta el procedimiento
-
-
         return listado;
     }
 
@@ -458,27 +467,40 @@ public class PedidoController {
     }
 
 
-    // Sincronizar precion ecuador
+    // Sincronizar precion ecuador (NO SE UTILIZARA POR EL MOMENTO)
     @GetMapping("/sincronizar-precio-ecuador/{idItem}")
-    public List<String> sincronizarPrecioEcuador(@PathVariable Long idItem){
+    public List<String> sincronizarPrecioEcuador(@PathVariable Long idItem) {
         ItemPedido item = itemPedidoServiceObj.findById(idItem);
-        return itemPedidoServiceObj.obtenerPrecioItemEcuador(item.getCodItem()+"","1792196841001",item.getUnidadMedida().trim());
-        //item.setPrecioUnitarioUnoee(new BigDecimal());
+
+        System.out.println(item);
+
+        // Se obtiene el precio del item Ecuador
+        List<String> resultadoPrecioEcuador = new ArrayList<>();
+        resultadoPrecioEcuador = itemPedidoServiceObj.obtenerPrecioItemEcuador(item.getCodCliente().trim(),
+                "1792196841001", item.getUnidadMedida().trim());
+
+        System.out.println(resultadoPrecioEcuador.get(0));
+
+        //Se añade al item
+        item.setPrecioUnitarioUnoee(new BigDecimal(resultadoPrecioEcuador.get(0)));
+        System.out.println(item.getPrecioUnitarioUnoee());
+
+        //Se obtiene la fecha de actualizacion de precio uno ee
+        List<Date> fechaActualizacionPrecioUnoee = new ArrayList<>();
+        fechaActualizacionPrecioUnoee = itemPedidoServiceObj.ObtenerFechaPrecioItemEcuador(item.getCodCliente().trim(),
+                "1792196841001", item.getUnidadMedida().trim());
+
+        //Se añade al item
+        item.setFechaActualizacionPrecioUnoee(fechaActualizacionPrecioUnoee.get(0));
+        System.out.println(item.getFechaActualizacionPrecioUnoee());
+
+        //Se guarda la edicion del item en la BD
+        itemPedidoServiceObj.saveItem(item);
+        return null;
     }
     //*************************************************
     //MANEJO DE LISTAS DE ERRORES********************************
     //*************************************************
-
-
-
-
-
-
-
-
-
-
-
 
 
 }
