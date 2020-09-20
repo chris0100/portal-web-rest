@@ -24,6 +24,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -289,11 +293,10 @@ public class PedidoController {
 
 
 
+
     //Obtener el conector a partir del id del pedido
     @PostMapping("/obtener-conector-error")
     public List<String> obtenerConectorPedidoError(@Valid @RequestBody Pedido pedido) throws Exception {
-
-        System.out.println("aqui ingresa el pedido con el error " + pedido);
 
         //Obtiene el conector en forma de lista y lo convierte a un solo string
         List<String> listapvstrDatos = pedidoServiceObj.obtenerConectorPedido(pedido.getId().toString());
@@ -309,11 +312,23 @@ public class PedidoController {
         //Se localiza la original para editar campos de web services
         Pedido pedidoBD = pedidoServiceObj.findById(pedido.getId());
 
-        //Ejecuta el WebService
         List<String> respuesta = new ArrayList<>();
-        respuesta = pedidoServiceObj.ejecucionWSError(pvstrDatos, pedidoBD);
+
+        ////////////////////////////////////////////////////////////
+        //Se realiza la gestion del conector con web service
+        pedidoServiceObj.ejecucionWSError(pvstrDatos, pedidoBD);
+
+        System.out.println("termina de ejecutar el webservice");
+
+        if (pedidoBD.getEstadoWB() == 1) {
+            respuesta.add("El pedido no fue creado debido a errores");
+        } else {
+            respuesta.add("El pedido fue creado exitosamente");
+        }
         return respuesta;
     }
+
+
 
 
     // Se realiza el tratamiento de los datos enviados por excel

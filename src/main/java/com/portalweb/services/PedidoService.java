@@ -33,7 +33,7 @@ public interface PedidoService {
 
     List<Pedido> obtenerPedidoEstado();
 
-    List<String> ejecucionWSError(String pvstrDatos, Pedido pedido) throws InterruptedException;
+    void ejecucionWSError(String pvstrDatos, Pedido pedido) throws Exception;
 
 
 
