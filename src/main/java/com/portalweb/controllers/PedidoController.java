@@ -9,6 +9,7 @@ import com.portalweb.services.ItemPedidoService;
 import com.portalweb.services.PedidoService;
 import com.portalweb.services.UnoEEService;
 import com.portalweb.soapunoee.Test;
+import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -253,6 +254,8 @@ public class PedidoController {
 
         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
     }
+
+
 
 
     //Obtener datos del asesor UnoEE
@@ -512,6 +515,48 @@ public class PedidoController {
         //Se guarda la edicion del item en la BD
         itemPedidoServiceObj.saveItem(item);
         return null;
+    }
+
+
+
+    // Edicion del item pedido error
+    @PostMapping("/editar-item-pedido-error")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> editarItemPedidoError(@Valid @RequestBody ItemPedido itemPedido, BindingResult result){
+        ItemPedido itemNuevo = null;
+
+        Map<String, Object> response = new HashMap<>();
+
+        // Se revisan los errores
+        if(result.hasErrors()) {
+            System.out.println("han ocurrido errores");
+
+            List<String> errors = result.getFieldErrors()
+                    .stream()
+                    .map(err -> "el campo " + err.getField() + " : " + err.getDefaultMessage())
+                    .collect(Collectors.toList());
+
+            response.put("errors", errors);
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        try{
+            //Se guarda el pedido en la base de datos
+            System.out.println("**********************************************");
+            System.out.println("Este es el item a editar " + itemPedido.toString());
+            System.out.println("***********************************************");
+
+            itemPedidoServiceObj.saveItem(itemPedido);
+        } catch (DataAccessException e) {
+            System.out.println("existe un error para guardar en la BD");
+            response.put("mensaje", "Error al realizar la edicion del item en la BD");
+            response.put("error", e.getMessage() + " : " + e.getMostSpecificCause());
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        response.put("mensaje", "El item ha sido editado con exito");
+
+        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
     }
     //*************************************************
     //MANEJO DE LISTAS DE ERRORES********************************
