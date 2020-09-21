@@ -384,10 +384,8 @@ public class UsuarioController {
             usuarioActual.setNit(usuario.getNit());
             usuarioActual.setUsername(usuario.getUsername());
             usuarioActual.setEmail(usuario.getEmail());
+            usuarioActual.setPrimerLogin(usuario.isPrimerLogin());
 
-            //Se encripta la contraseña para pasar al usuario actual
-            String password = passwordEncoder.encode(usuario.getPassword());
-            usuarioActual.setPassword(password);
 
             //Se leen los respectivos roles para que sean guardados en el usuario.
             // Se traen de ANG los string con id_rol
