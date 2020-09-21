@@ -378,6 +378,7 @@ public class UsuarioController {
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
         }
 
+
         //Se pasan los datos
         try {
             usuarioActual.setNombre(usuario.getNombre());

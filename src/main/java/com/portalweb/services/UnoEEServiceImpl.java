@@ -2,6 +2,7 @@ package com.portalweb.services;
 
 import com.portalweb.controllers.ItemPedidoUnoEEController;
 import com.portalweb.controllers.PedidoUnoeeController;
+import com.portalweb.models.CertificadoRetencionIVA;
 import com.portalweb.repositories.UnoEERepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -371,4 +372,114 @@ public class UnoEEServiceImpl implements UnoEEService {
         }
         return null;
     }
+
+
+    @Override
+    public int obtenerRowIdTercero(String nit) throws SQLException {
+        String connectionUrl ="jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=UnoEE;user=bd_eureka;password=Desarrollos478#";
+        Connection con = DriverManager.getConnection(connectionUrl);
+        Statement stmt = null;
+        String query = "select top 1 f200_rowid id_tercero from UnoEE.dbo.t200_mm_terceros where f200_nit = '"+nit+"'";
+
+        int resultado = 0;
+
+        try {
+            stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                resultado = rs.getInt("id_tercero");
+            }
+            return resultado;
+        } catch (SQLException e ) {
+            System.out.println("error "+e);
+            return -1;
+        } finally {
+            if (stmt != null) { stmt.close(); }
+        }
+    }
+
+
+    @Override
+    public List<CertificadoRetencionIVA> recargarConsultarIvaUnoEE(String mesInicio, String mesFin, String anioGrabable, String nit, int rowIdTercero) throws SQLException {
+        String connectionUrl ="jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=UnoEE;user=bd_eureka;password=Desarrollos478#";
+        Connection con = DriverManager.getConnection(connectionUrl);
+        Statement stmt = null;
+        String query = "exec sp_certificado_retencion 1,2,1,'PCI','2367',0,"+rowIdTercero+",$0.0000,"+Integer.parseInt(anioGrabable)+","+mesInicio+","+mesFin+",'YM',NULL,NULL,'Cali','Cali',0,0,0,' '";
+        List<CertificadoRetencionIVA> listaCertificadoRetencionIva = new ArrayList<>();
+        BigDecimal total_monto = new BigDecimal(0);
+        BigDecimal total_base = new BigDecimal(0);
+        BigDecimal total_retenido = new BigDecimal(0);
+        CertificadoRetencionIVA certificadoRetencionIvaActual;
+
+        try{
+            stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                certificadoRetencionIvaActual = new CertificadoRetencionIVA();
+                certificadoRetencionIvaActual.setDircia(rs.getString("dircia"));
+                certificadoRetencionIvaActual.setCiudadcia(rs.getString("ciudadcia"));
+                certificadoRetencionIvaActual.setRazon(rs.getString("razon"));
+                certificadoRetencionIvaActual.setTipoid(rs.getString("tipoid"));
+                certificadoRetencionIvaActual.setIdent(rs.getString("ident"));
+                certificadoRetencionIvaActual.setDirtercero(rs.getString("dirtercero"));
+                certificadoRetencionIvaActual.setCiudadtercero(rs.getString("ciudadtercero"));
+                certificadoRetencionIvaActual.setAuxiliar(rs.getString("auxiliar"));
+                certificadoRetencionIvaActual.setIdaux(rs.getString("idaux"));
+                certificadoRetencionIvaActual.setTasa(rs.getBigDecimal("tasa"));
+                certificadoRetencionIvaActual.setTasabase(rs.getInt("tasabase"));
+                certificadoRetencionIvaActual.setBase(rs.getBigDecimal("base"));
+                certificadoRetencionIvaActual.setNeto(rs.getBigDecimal("neto"));
+                certificadoRetencionIvaActual.setBimestre(rs.getInt("bimestre"));
+                certificadoRetencionIvaActual.setFirma(rs.getString("firma"));
+                certificadoRetencionIvaActual.setCargo(rs.getString("cargo"));
+                certificadoRetencionIvaActual.setTotalneto(rs.getBigDecimal("totalneto"));
+                certificadoRetencionIvaActual.setAgrupapor(rs.getInt("agrupapor"));
+                certificadoRetencionIvaActual.setCiudad_practica(rs.getString("ciudad_practica"));
+                certificadoRetencionIvaActual.setCiudad_consigna(rs.getString("ciudad_consigna"));
+                certificadoRetencionIvaActual.setF_email(rs.getString("f_email"));
+                certificadoRetencionIvaActual.setF_nombre_archivo(rs.getString("f_nombre_archivo"));
+                certificadoRetencionIvaActual.setTotalabonocta(rs.getBigDecimal("totalabonocta"));
+
+                //SUMA PARA CALCULAR EL MONTO TOTAL
+                total_monto = (total_monto).add(certificadoRetencionIvaActual.getBase());
+                //SUMA PARA CALCULAR EL VL BASE
+                total_base = (total_base).add(certificadoRetencionIvaActual.getBase());
+                //SUMA PARA CALCULAR EL VR- RETENIDO
+                total_retenido =  (total_retenido).add(certificadoRetencionIvaActual.getNeto());
+
+                try{
+                    certificadoRetencionIvaActual.setDesde(rs.getDate("desde"));
+                    certificadoRetencionIvaActual.setHasta(rs.getDate("hasta"));
+                }catch (Exception e){
+                    certificadoRetencionIvaActual.setDesde(null);
+                    certificadoRetencionIvaActual.setHasta(null);
+                }
+                listaCertificadoRetencionIva.add(certificadoRetencionIvaActual);
+            }
+/*            for (CertificadoRetencionIVA encabezado : listaCertificadoRetencionIva) {
+                setRazon(encabezado.getRazon());
+                setTipoid(encabezado.getTipoid());
+                setIdent(encabezado.getIdent());
+                setDirtercero(encabezado.getDirtercero());
+                setCiudadtercero(encabezado.getCiudadtercero());
+                setCiudad_practica(encabezado.getCiudad_practica());
+                setCiudad_consigna(encabezado.getCiudad_consigna());
+                setAuxiliar(encabezado.getAuxiliar());
+                setFirma(encabezado.getFirma());
+                setCargo(encabezado.getCargo());
+                break;
+            }*/
+            return listaCertificadoRetencionIva;
+        }
+        catch (SQLException e ) {
+            System.out.println("error "+e);
+            return null;
+        } finally {
+            if (stmt != null) { stmt.close(); }
+        }
+    }
+
+
+
+
 }
