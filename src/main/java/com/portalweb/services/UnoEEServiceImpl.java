@@ -3,6 +3,7 @@ package com.portalweb.services;
 import com.portalweb.controllers.ItemPedidoUnoEEController;
 import com.portalweb.controllers.PedidoUnoeeController;
 import com.portalweb.models.CertificadoRetencionIVA;
+import com.portalweb.models.ConvertNumero;
 import com.portalweb.repositories.UnoEERepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -289,7 +290,7 @@ public class UnoEEServiceImpl implements UnoEEService {
 
     @Override
     public List<String> obtenerDatosItemCompleto(int codItem, String ext1, String ext2) throws SQLException {
-        String connectionUrl ="jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=UnoEE;user=bd_eureka;password=Desarrollos478#";
+        String connectionUrl = "jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=UnoEE;user=bd_eureka;password=Desarrollos478#";
         Connection con = DriverManager.getConnection(connectionUrl);
         Statement stmt = null;
 
@@ -300,7 +301,7 @@ public class UnoEEServiceImpl implements UnoEEService {
         //codBarra(4)
         List<String> datosResultado = new ArrayList<>();
 
-        String query = "select v121_descripcion, v121_referencia, v121_id_unidad_inventario, v121_id_unidad_orden, v121_id_barras_principal from UnoEE.dbo.v121 where v121_id_item = "+codItem+" and v121_id_ext1_detalle = '"+ext1+"' and v121_id_ext2_detalle = '"+ext2+"' and v121_id_cia = '001'";
+        String query = "select v121_descripcion, v121_referencia, v121_id_unidad_inventario, v121_id_unidad_orden, v121_id_barras_principal from UnoEE.dbo.v121 where v121_id_item = " + codItem + " and v121_id_ext1_detalle = '" + ext1 + "' and v121_id_ext2_detalle = '" + ext2 + "' and v121_id_cia = '001'";
 
 
         try {
@@ -314,11 +315,13 @@ public class UnoEEServiceImpl implements UnoEEService {
                 datosResultado.add(rs.getString("v121_id_barras_principal"));
             }
             return datosResultado;
-        } catch (SQLException e ) {
-            System.out.println("error "+e);
+        } catch (SQLException e) {
+            System.out.println("error " + e);
             return new ArrayList<>();
         } finally {
-            if (stmt != null) { stmt.close(); }
+            if (stmt != null) {
+                stmt.close();
+            }
         }
     }
 
@@ -326,13 +329,13 @@ public class UnoEEServiceImpl implements UnoEEService {
     //Obtiene la cantidad disponible del item
     @Override
     public BigDecimal obtenerDisponibleItemCompleto(int codItem, String ext1, String ext2) throws SQLException {
-        String connectionUrl ="jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=UnoEE;user=bd_eureka;password=Desarrollos478#";
+        String connectionUrl = "jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=UnoEE;user=bd_eureka;password=Desarrollos478#";
         Connection con = DriverManager.getConnection(connectionUrl);
         Statement stmt = null;
 
         BigDecimal disponible = new BigDecimal(0);
 
-        String query = "SELECT sum(v400_cant_disponible_1-v400_cant_pendiente_salir_1) disponible_real FROM [UnoEE].[dbo].[v400_item_ext] v400 inner join [UnoEE].[dbo].[t150_mc_bodegas] t150 on v400.v400_rowid_bodega = t150.f150_rowid inner join [UnoEE].[dbo].v121 on v121.v121_rowid_item_ext = v400_rowid_item_ext where v121.v121_id_item = "+codItem+" and v121.v121_id_ext1_detalle = '"+ext1+"' and v121.v121_id_ext2_detalle = '"+ext2+"' and v121.v121_id_cia = '001' and (t150.f150_id = '001' or t150.f150_id = '002')";
+        String query = "SELECT sum(v400_cant_disponible_1-v400_cant_pendiente_salir_1) disponible_real FROM [UnoEE].[dbo].[v400_item_ext] v400 inner join [UnoEE].[dbo].[t150_mc_bodegas] t150 on v400.v400_rowid_bodega = t150.f150_rowid inner join [UnoEE].[dbo].v121 on v121.v121_rowid_item_ext = v400_rowid_item_ext where v121.v121_id_item = " + codItem + " and v121.v121_id_ext1_detalle = '" + ext1 + "' and v121.v121_id_ext2_detalle = '" + ext2 + "' and v121.v121_id_cia = '001' and (t150.f150_id = '001' or t150.f150_id = '002')";
         try {
             stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(query);
@@ -340,10 +343,12 @@ public class UnoEEServiceImpl implements UnoEEService {
                 disponible = rs.getBigDecimal("disponible_real");
             }
             return disponible;
-        } catch (SQLException e ) {
-            System.out.println("error "+e);
+        } catch (SQLException e) {
+            System.out.println("error " + e);
         } finally {
-            if (stmt != null) { stmt.close(); }
+            if (stmt != null) {
+                stmt.close();
+            }
         }
         return null;
     }
@@ -351,13 +356,13 @@ public class UnoEEServiceImpl implements UnoEEService {
 
     @Override
     public BigDecimal obtenerDisponibleItem(int codItem) throws SQLException {
-        String connectionUrl ="jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=UnoEE;user=bd_eureka;password=Desarrollos478#";
+        String connectionUrl = "jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=UnoEE;user=bd_eureka;password=Desarrollos478#";
         Connection con = DriverManager.getConnection(connectionUrl);
         Statement stmt = null;
 
         BigDecimal disponible = new BigDecimal(0);
 
-        String query = "SELECT sum(v400_cant_disponible_1-v400_cant_pendiente_salir_1) disponible_real FROM [UnoEE].[dbo].[v400_item_ext] v400 inner join [UnoEE].[dbo].[t150_mc_bodegas] t150 on v400.v400_rowid_bodega = t150.f150_rowid inner join [UnoEE].[dbo].v121 on v121.v121_rowid_item_ext = v400_rowid_item_ext where v121.v121_id_item = "+codItem +"and v121.v121_id_cia = '001' and (t150.f150_id = '001' or t150.f150_id = '002')";
+        String query = "SELECT sum(v400_cant_disponible_1-v400_cant_pendiente_salir_1) disponible_real FROM [UnoEE].[dbo].[v400_item_ext] v400 inner join [UnoEE].[dbo].[t150_mc_bodegas] t150 on v400.v400_rowid_bodega = t150.f150_rowid inner join [UnoEE].[dbo].v121 on v121.v121_rowid_item_ext = v400_rowid_item_ext where v121.v121_id_item = " + codItem + "and v121.v121_id_cia = '001' and (t150.f150_id = '001' or t150.f150_id = '002')";
         try {
             stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(query);
@@ -365,10 +370,12 @@ public class UnoEEServiceImpl implements UnoEEService {
                 disponible = rs.getBigDecimal("disponible_real");
             }
             return disponible;
-        } catch (SQLException e ) {
-            System.out.println("error "+e);
+        } catch (SQLException e) {
+            System.out.println("error " + e);
         } finally {
-            if (stmt != null) { stmt.close(); }
+            if (stmt != null) {
+                stmt.close();
+            }
         }
         return null;
     }
@@ -376,10 +383,10 @@ public class UnoEEServiceImpl implements UnoEEService {
 
     @Override
     public int obtenerRowIdTercero(String nit) throws SQLException {
-        String connectionUrl ="jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=UnoEE;user=bd_eureka;password=Desarrollos478#";
+        String connectionUrl = "jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=UnoEE;user=bd_eureka;password=Desarrollos478#";
         Connection con = DriverManager.getConnection(connectionUrl);
         Statement stmt = null;
-        String query = "select top 1 f200_rowid id_tercero from UnoEE.dbo.t200_mm_terceros where f200_nit = '"+nit+"'";
+        String query = "select top 1 f200_rowid id_tercero from UnoEE.dbo.t200_mm_terceros where f200_nit = '" + nit + "'";
 
         int resultado = 0;
 
@@ -390,28 +397,31 @@ public class UnoEEServiceImpl implements UnoEEService {
                 resultado = rs.getInt("id_tercero");
             }
             return resultado;
-        } catch (SQLException e ) {
-            System.out.println("error "+e);
+        } catch (SQLException e) {
+            System.out.println("error " + e);
             return -1;
         } finally {
-            if (stmt != null) { stmt.close(); }
+            if (stmt != null) {
+                stmt.close();
+            }
         }
     }
 
 
     @Override
-    public List<CertificadoRetencionIVA> recargarConsultarIvaUnoEE(String mesInicio, String mesFin, String anioGrabable, String nit, int rowIdTercero) throws SQLException {
-        String connectionUrl ="jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=UnoEE;user=bd_eureka;password=Desarrollos478#";
+    public List<CertificadoRetencionIVA> recargarConsultarIvaUnoEE(String mesInicio, String mesFin, String anioGrabable, int rowIdTercero) throws SQLException {
+        String connectionUrl = "jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=UnoEE;user=bd_eureka;password=Desarrollos478#";
         Connection con = DriverManager.getConnection(connectionUrl);
         Statement stmt = null;
-        String query = "exec sp_certificado_retencion 1,2,1,'PCI','2367',0,"+rowIdTercero+",$0.0000,"+Integer.parseInt(anioGrabable)+","+mesInicio+","+mesFin+",'YM',NULL,NULL,'Cali','Cali',0,0,0,' '";
+        String query = "exec sp_certificado_retencion 1,2,1,'PCI','2367',0," + rowIdTercero + ",$0.0000," + Integer.parseInt(anioGrabable) + "," + mesInicio + "," + mesFin + ",'YM',NULL,NULL,'Cali','Cali',0,0,0,' '";
         List<CertificadoRetencionIVA> listaCertificadoRetencionIva = new ArrayList<>();
+
         BigDecimal total_monto = new BigDecimal(0);
         BigDecimal total_base = new BigDecimal(0);
         BigDecimal total_retenido = new BigDecimal(0);
         CertificadoRetencionIVA certificadoRetencionIvaActual;
 
-        try{
+        try {
             stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(query);
             while (rs.next()) {
@@ -445,17 +455,24 @@ public class UnoEEServiceImpl implements UnoEEService {
                 //SUMA PARA CALCULAR EL VL BASE
                 total_base = (total_base).add(certificadoRetencionIvaActual.getBase());
                 //SUMA PARA CALCULAR EL VR- RETENIDO
-                total_retenido =  (total_retenido).add(certificadoRetencionIvaActual.getNeto());
+                total_retenido = (total_retenido).add(certificadoRetencionIvaActual.getNeto());
 
-                try{
+                try {
                     certificadoRetencionIvaActual.setDesde(rs.getDate("desde"));
                     certificadoRetencionIvaActual.setHasta(rs.getDate("hasta"));
-                }catch (Exception e){
+                } catch (Exception e) {
                     certificadoRetencionIvaActual.setDesde(null);
                     certificadoRetencionIvaActual.setHasta(null);
                 }
                 listaCertificadoRetencionIva.add(certificadoRetencionIvaActual);
             }
+
+            // Se cargan valores de los totales en un campo aparte
+            listaCertificadoRetencionIva.get(0).setTotal_monto(total_monto);
+            listaCertificadoRetencionIva.get(0).setTotal_base(total_base);
+            listaCertificadoRetencionIva.get(0).setTotal_retenido(total_retenido);
+
+
 /*            for (CertificadoRetencionIVA encabezado : listaCertificadoRetencionIva) {
                 setRazon(encabezado.getRazon());
                 setTipoid(encabezado.getTipoid());
@@ -470,14 +487,107 @@ public class UnoEEServiceImpl implements UnoEEService {
                 break;
             }*/
             return listaCertificadoRetencionIva;
-        }
-        catch (SQLException e ) {
-            System.out.println("error "+e);
+        } catch (SQLException e) {
+            System.out.println("error " + e);
             return null;
         } finally {
-            if (stmt != null) { stmt.close(); }
+            if (stmt != null) {
+                stmt.close();
+            }
         }
     }
+
+
+    //Consultar certificado retencion
+    @Override
+    public List<CertificadoRetencionIVA> recargarConsultarRetencion(String anioGrabable, int rowIdTercero, String ciudadConsignoParam, String ciudadPracticoParam,
+                                                                    String tipoCertificado) throws SQLException {
+        String connectionUrl = "jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=UnoEE;user=bd_eureka;password=Desarrollos478#";
+        Connection con = DriverManager.getConnection(connectionUrl);
+        Statement stmt = null;
+        String query = "exec sp_certificado_retencion 1,0,2,'" + tipoCertificado + "','23',0," + rowIdTercero + ",$0.0000,'" + anioGrabable + "'," + 0 + "," + 0 + ",'YM',NULL,NULL,'" + ciudadPracticoParam + "','" + ciudadConsignoParam + "',0,0,0,' '";
+
+        List<CertificadoRetencionIVA> listaCertificadoRetencionIva = new ArrayList<>();
+        CertificadoRetencionIVA certificadoRetencionIvaActual;
+
+        BigDecimal total_monto = new BigDecimal(0);
+        BigDecimal total_base = new BigDecimal(0);
+        BigDecimal total_retenido = new BigDecimal(0);
+
+
+        try {
+            stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while (rs.next()) {
+                certificadoRetencionIvaActual = new CertificadoRetencionIVA();
+                certificadoRetencionIvaActual.setDircia(rs.getString("dircia"));
+                certificadoRetencionIvaActual.setCiudadcia(rs.getString("ciudadcia"));
+                certificadoRetencionIvaActual.setRazon(rs.getString("razon"));
+                certificadoRetencionIvaActual.setTipoid(rs.getString("tipoid"));
+                certificadoRetencionIvaActual.setIdent(rs.getString("ident"));
+                certificadoRetencionIvaActual.setDirtercero(rs.getString("dirtercero"));
+                certificadoRetencionIvaActual.setCiudadtercero(rs.getString("ciudadtercero"));
+                certificadoRetencionIvaActual.setAuxiliar(rs.getString("auxiliar"));
+                certificadoRetencionIvaActual.setIdaux(rs.getString("idaux"));
+                certificadoRetencionIvaActual.setTasa(rs.getBigDecimal("tasa"));
+                certificadoRetencionIvaActual.setTasabase(rs.getInt("tasabase"));
+                certificadoRetencionIvaActual.setBase(rs.getBigDecimal("base"));
+                certificadoRetencionIvaActual.setNeto(rs.getBigDecimal("neto"));
+                certificadoRetencionIvaActual.setBimestre(rs.getInt("bimestre"));
+                certificadoRetencionIvaActual.setFirma(rs.getString("firma"));
+                certificadoRetencionIvaActual.setCargo(rs.getString("cargo"));
+                certificadoRetencionIvaActual.setTotalneto(rs.getBigDecimal("totalneto"));
+                certificadoRetencionIvaActual.setAgrupapor(rs.getInt("agrupapor"));
+                certificadoRetencionIvaActual.setCiudad_practica(rs.getString("ciudad_practica"));
+                certificadoRetencionIvaActual.setCiudad_consigna(rs.getString("ciudad_consigna"));
+                certificadoRetencionIvaActual.setF_email(rs.getString("f_email"));
+                certificadoRetencionIvaActual.setF_nombre_archivo(rs.getString("f_nombre_archivo"));
+                certificadoRetencionIvaActual.setTotalabonocta(rs.getBigDecimal("totalabonocta"));
+
+                //SUMA PARA CALCULAR EL MONTO TOTAL
+                total_monto = (total_monto).add(certificadoRetencionIvaActual.getBase());
+                //SUMA PARA CALCULAR EL VL BASE
+                total_base = (total_base).add(certificadoRetencionIvaActual.getBase());
+                //SUMA PARA CALCULAR EL VR- RETENIDO
+                total_retenido = (total_retenido).add(certificadoRetencionIvaActual.getNeto());
+                try {
+                    certificadoRetencionIvaActual.setDesde(rs.getDate("desde"));
+                    certificadoRetencionIvaActual.setHasta(rs.getDate("hasta"));
+                } catch (Exception e) {
+                    certificadoRetencionIvaActual.setDesde(null);
+                    certificadoRetencionIvaActual.setHasta(null);
+                }
+                listaCertificadoRetencionIva.add(certificadoRetencionIvaActual);
+            }
+
+            // Se cargan valores de los totales en un campo aparte
+            listaCertificadoRetencionIva.get(0).setTotal_monto(total_monto);
+            listaCertificadoRetencionIva.get(0).setTotal_base(total_base);
+            listaCertificadoRetencionIva.get(0).setTotal_retenido(total_retenido);
+            listaCertificadoRetencionIva.get(0).setConvertirNumero(getConvertirNumero(total_retenido));
+
+            return listaCertificadoRetencionIva;
+
+        } catch (SQLException e) {
+            System.out.println("error " + e);
+            return null;
+        } finally {
+            if (stmt != null) {
+                stmt.close();
+            }
+        }
+    }
+
+
+    //Operacion de conversion de numero
+    public String getConvertirNumero(BigDecimal total_retenido){
+        ConvertNumero num = new ConvertNumero();
+        double aDouble = total_retenido.doubleValue();
+        String numero = Double.toString(aDouble);
+        return num.Convertir(numero, true);
+    }
+
+
 
 
 

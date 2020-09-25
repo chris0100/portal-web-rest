@@ -35,6 +35,7 @@ public class CertificadoRetencionIVA {
     private BigDecimal total_retenido;
     private Date fechaExpedicion = new Date();
     private String numero_letras;
+    private String convertirNumero;
 
 
     Calendar cal= Calendar.getInstance();
@@ -49,9 +50,19 @@ public class CertificadoRetencionIVA {
     private Usuario usuarioActual;
 
 
+
+
     public CertificadoRetencionIVA() {
     }
 
+
+    public String getConvertirNumero() {
+        return convertirNumero;
+    }
+
+    public void setConvertirNumero(String convertirNumero) {
+        this.convertirNumero = convertirNumero;
+    }
 
     public String getDircia() {
         return dircia;

@@ -1,4 +1,5 @@
 package com.portalweb.controllers;
+
 import com.portalweb.models.CertificadoRetencionIVA;
 import com.portalweb.services.UnoEEService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,19 +36,19 @@ public class ProveedorController {
 
         int rowIdTercero = unoEEServiceObj.obtenerRowIdTercero(nit);
         System.out.println("el rowIdTercero es: " + rowIdTercero);
-        resultado.add(rowIdTercero+"");
+        resultado.add(rowIdTercero + "");
         return resultado;
     }
 
 
-
-
+    //CAMBIAR------EN EL MOMENTO DEL DESPLIEGUE--->
     // RECORDAR CAMBIAR EL NIT Y EL ROW IDTERCERO
     // Crear el PDF despues de seleccionar PCI
-    @GetMapping("/crear-pdf-iva/{mesInicio}/{mesFin}/{anioGrabable}/{nit}/{rowIdTercero}")
+    // "1000001792904285001"
+    @GetMapping("/crear-pdf-iva/{mesInicio}/{mesFin}/{anioGrabable}/{rowIdTercero}")
     public ResponseEntity<?> crearPDFIva(@PathVariable String mesInicio, @PathVariable String mesFin,
-                                      @PathVariable String anioGrabable, @PathVariable String nit,
-                                      @PathVariable int rowIdTercero) throws SQLException {
+                                         @PathVariable String anioGrabable,
+                                         @PathVariable int rowIdTercero) throws SQLException {
 
         Map<String, Object> response = new HashMap<>();
 
@@ -62,31 +63,62 @@ public class ProveedorController {
         Calendar calAnioActual = Calendar.getInstance();
         int anioActual = calAnioActual.get(Calendar.YEAR);
 
-        if(fin < inicio){
+        if (fin < inicio) {
             response.put("mensaje", "La fecha final no puede ser menor que la fecha de inicio");
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_GATEWAY);
-        }
-        else if(Integer.parseInt(anioGrabable) > anioActual){
+        } else if (Integer.parseInt(anioGrabable) > anioActual) {
             response.put("mensaje", "El documento no se encuentra disponible, el año es mayor al año actual");
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_GATEWAY);
-        }
-        else if(fin > mesFinActual && Integer.parseInt(anioGrabable) == anioActual){
+        } else if (fin > mesFinActual && Integer.parseInt(anioGrabable) == anioActual) {
             response.put("mensaje", "El documento no se encuentra disponible");
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_GATEWAY);
-        }
-        else{
+        } else {
             // Se recarga la consulta IVA UNOEE
-            listaCertificadoRetencionIVA = unoEEServiceObj.recargarConsultarIvaUnoEE(mesInicio,mesFin,anioGrabable,"1000001792904285001",0);
+            listaCertificadoRetencionIVA = unoEEServiceObj.recargarConsultarIvaUnoEE(mesInicio, mesFin, anioGrabable, 0);
             System.out.println(listaCertificadoRetencionIVA);
 
-            if(listaCertificadoRetencionIVA.isEmpty()){
-                response.put("mensaje", "El documento no se encuentra disponible");
+            if (listaCertificadoRetencionIVA.isEmpty()) {
+                response.put("mensaje", "No se le aplico retención en el periodo seleccionado");
                 return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NO_CONTENT);
-            }
-            else {
+            } else {
                 return new ResponseEntity<>(listaCertificadoRetencionIVA, HttpStatus.OK);
             }
         }
     }
+
+
+    //Generar pdf de retencion
+    @GetMapping("/crear-pdf-retencion/{anioGrabable}/{rowIdTercero}/{ciudadConsignoParam}/{ciudadPracticoParam}/{tipoCertificado}")
+    public ResponseEntity<?> crearPDFRetencion(@PathVariable String anioGrabable, @PathVariable int rowIdTercero,
+                                               @PathVariable String ciudadConsignoParam, @PathVariable String ciudadPracticoParam,
+                                               @PathVariable String tipoCertificado) throws SQLException {
+
+
+        System.out.println(anioGrabable);
+
+        Map<String, Object> response = new HashMap<>();
+
+        List<CertificadoRetencionIVA> listaCertificadoRetencionIVA = new ArrayList<>();
+
+        Calendar calAnioActual = Calendar.getInstance();
+        int anioActual = calAnioActual.get(Calendar.YEAR);
+
+        if (Integer.parseInt(anioGrabable.trim()) >= anioActual) {
+            response.put("mensaje", "El documento no se encuentra disponible");
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_GATEWAY);
+        }
+
+        //Recargar la consulta de la retencion
+        listaCertificadoRetencionIVA = unoEEServiceObj.recargarConsultarRetencion(anioGrabable, 0,
+                ciudadConsignoParam, ciudadPracticoParam, tipoCertificado);
+
+        if (listaCertificadoRetencionIVA.isEmpty()) {
+            response.put("mensaje", "No se le aplico retención en el periodo seleccionado");
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(listaCertificadoRetencionIVA, HttpStatus.OK);
+        }
+    }
+
 
 }

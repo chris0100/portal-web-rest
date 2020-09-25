@@ -37,5 +37,8 @@ public interface UnoEEService {
     int obtenerRowIdTercero(String nit) throws SQLException;
 
     List<CertificadoRetencionIVA> recargarConsultarIvaUnoEE(String mesInicio, String mesFin,
-                                                            String anioGrabable, String nit, int rowIdTercero) throws SQLException;
+                                                            String anioGrabable, int rowIdTercero) throws SQLException;
+
+    List<CertificadoRetencionIVA> recargarConsultarRetencion(String anioGrabable, int rowIdTercero,
+                                                             String ciudadConsignoParam, String ciudadPracticoParam, String tipoCertificado) throws SQLException;
 }
