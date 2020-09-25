@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -43,14 +44,14 @@ public class Usuario implements Serializable {
     @Column(name = "primer_login")
     private Boolean primerLogin;
 
-   /*@Column(name = "token")
+   @Column(name = "token")
     private String token;
 
     @Column(name = "estado_token")
-    private boolean estadoToken;
+    private Boolean estadoToken;
 
     @Column(name = "hora_token")
-    private Date horaToken;*/
+    private Date horaToken;
 
     @Column(name = "intentos_bloqueo")
     private Integer intentosBloqueo;
@@ -135,7 +136,7 @@ public class Usuario implements Serializable {
         this.primerLogin = primerLogin;
     }
 
-   /*public String getToken() {
+   public String getToken() {
         return token;
     }
 
@@ -143,12 +144,20 @@ public class Usuario implements Serializable {
         this.token = token;
     }
 
-    public boolean isEstadoToken() {
+    public Boolean getPrimerLogin() {
+        return primerLogin;
+    }
+
+    public Boolean getEstadoToken() {
         return estadoToken;
     }
 
-    public void setEstadoToken(boolean estadoToken) {
+    public void setEstadoToken(Boolean estadoToken) {
         this.estadoToken = estadoToken;
+    }
+
+    public Boolean getCondicionesRestricciones() {
+        return condicionesRestricciones;
     }
 
     public Date getHoraToken() {
@@ -157,7 +166,7 @@ public class Usuario implements Serializable {
 
     public void setHoraToken(Date horaToken) {
         this.horaToken = horaToken;
-    }*/
+    }
 
     public Integer getIntentosBloqueo() {
         return intentosBloqueo;
