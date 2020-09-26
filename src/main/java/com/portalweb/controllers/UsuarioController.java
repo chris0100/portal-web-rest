@@ -477,6 +477,68 @@ public class UsuarioController {
 
 
 
+    //Modifica la contraseña del usuario
+    @PutMapping("/reestablecer-password/{token}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> reestablecerPassword(@Valid @RequestBody String pass, BindingResult result,@PathVariable String token) {
+
+        System.out.println("nuevo pass: " + pass);
+
+        //Localiza al usuario
+        Usuario usuario = usuarioServiceObj.findByToken(token);
+
+        Usuario usuarioUpdated = null;
+
+        Map<String, Object> response = new HashMap<>();
+
+
+        // Si existen errores
+        if (result.hasErrors()) {
+            List<String> errors = result.getFieldErrors()
+                    .stream()
+                    .map(err -> "El campo " + err.getField() + " " + err.getDefaultMessage())
+                    .collect(Collectors.toList());
+
+            response.put("errors", errors);
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+        }
+
+
+        //Si el usuario que se quiere editar no existe en la BD
+        if (usuario == null) {
+            response.put("mensaje", "Error: No se puede actualizar la contraseña");
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+        }
+
+
+        try {
+            //Se encripta el nuevo password
+            String nuevaPasswordEnc = passwordEncoder.encode(pass.trim());
+            usuario.setPassword(nuevaPasswordEnc);
+            usuario.setToken(null);
+            usuario.setEstadoToken(null);
+            usuario.setHoraToken(null);
+            usuario.setIntentosBloqueo(3);
+
+            //Se guarda el usuario en la base de datos
+            usuarioUpdated = usuarioServiceObj.save(usuario);
+
+        } catch (DataAccessException de) {
+            response.put("mensaje", "Error al actualizar la contraseña en la Base de Datos");
+            response.put("error", "Error critico de almacenamiento");
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        //Si se crea correctamente el usuario envia mensaje satisfactorio.
+        response.put("mensaje", "La contraseña ha sido actualizada con exito");
+        response.put("usuario", usuarioUpdated);
+
+        return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
+    }
+
+
+
+
     //Traer un solo usuario a traves del nit y el email
     @GetMapping("/generar-token-usuario/{email}/{nit}")
     @ResponseStatus(HttpStatus.OK)
