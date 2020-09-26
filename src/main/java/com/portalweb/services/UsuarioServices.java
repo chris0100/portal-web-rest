@@ -19,4 +19,6 @@ public interface UsuarioServices {
     public List<Usuario> findAllByEmailAndNit(String email, String nit);
 
     void sendMailRecuperarContrasena(Usuario usuario) throws FileNotFoundException;
+
+    Usuario findByToken(String token);
 }

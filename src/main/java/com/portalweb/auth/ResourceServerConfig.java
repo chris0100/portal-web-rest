@@ -36,7 +36,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                         "/obtener-disponible-item/**", "/obtener-lista-pedido-error-asesor/**", "/obtener-lista-pedido-error",
                         "/sincronizar-items/**", "/sincronizar-bodega-item/**", "/sincronizar-precio-ecuador/**",
                         "/obtener-conector-error/**", "/obtener-row-id-tercero/**", "/crear-pdf-iva/**", "/crear-pdf-retencion/**",
-                        "/generar-token-usuario/**")
+                        "/generar-token-usuario/**", "/procesar-token/**")
                 .permitAll()
                 .antMatchers(HttpMethod.PUT, "/update-cliente/**", "/update-pass-cliente/**","/editar-otro-usuario/**","/update-pass-otro-usuario/**")
                 .permitAll()

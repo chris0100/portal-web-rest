@@ -84,6 +84,20 @@ public class UsuarioService implements UsuarioServices,UserDetailsService {
 
 
     @Override
+    public Usuario findByToken(String token) {
+        return usuarioRepositoryObj.findByToken(token);
+    }
+
+
+
+
+
+
+
+
+
+
+    @Override
     public void sendMailRecuperarContrasena(Usuario usuario) throws FileNotFoundException {
         emailController = new EmailController();
         String asunto = "Solicitud de restablecimiento de contraseña";
@@ -422,7 +436,7 @@ public class UsuarioService implements UsuarioServices,UserDetailsService {
                 "                    \n" +
                 "<div align=\"left\" class=\"button-container left \" style=\"padding-right: 0px; padding-left: 0px; padding-top:0px; padding-bottom:0px;\">\n" +
                 "  <!--[if mso]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;\"><tr><td style=\"padding-right: 0px; padding-left: 0px; padding-top:0px; padding-bottom:0px;\" align=\"left\"><v:roundrect xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:w=\"urn:schemas-microsoft-com:office:word\" href=\"link\" style=\"height:31pt; v-text-anchor:middle; width:172pt;\" arcsize=\"3%\" strokecolor=\"#0068A5\" fillcolor=\"#0068A5\"><w:anchorlock/><v:textbox inset=\"0,0,0,0\"><center style=\"color:#FFFFFF; font-family:'Open Sans', Helvetica, Arial, sans-serif; font-size:16px;\"><![endif]-->\n" +
-                "    <a href=\"https://www.portalweb.ekacorp.com.co/portalweb/faces/procesarToken.xhtml?id="+usuario.getToken()+"\" target=\"_blank\" style=\"display: block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #0068A5; border-radius: 1px; -webkit-border-radius: 1px; -moz-border-radius: 1px; max-width: 230px; width: 190px;width: auto; border-top: 0px solid transparent; border-right: 0px solid transparent; border-bottom: 0px solid transparent; border-left: 0px solid transparent; padding-top: 5px; padding-right: 20px; padding-bottom: 5px; padding-left: 20px; font-family: 'Open Sans', Helvetica, Arial, sans-serif;mso-border-alt: none\">\n" +
+                "    <a href=\"http://localhost:4200/procesar-token/"+usuario.getToken()+"\" target=\"_blank\" style=\"display: block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #0068A5; border-radius: 1px; -webkit-border-radius: 1px; -moz-border-radius: 1px; max-width: 230px; width: 190px;width: auto; border-top: 0px solid transparent; border-right: 0px solid transparent; border-bottom: 0px solid transparent; border-left: 0px solid transparent; padding-top: 5px; padding-right: 20px; padding-bottom: 5px; padding-left: 20px; font-family: 'Open Sans', Helvetica, Arial, sans-serif;mso-border-alt: none\">\n" +
                 "      <span style=\"font-family:'Open Sans', Helvetica, Arial, sans-serif;font-size:16px;line-height:32px;\"><span style=\"font-size: 15px; line-height: 30px;\"><strong>Restablecer contrase&#241a</strong></span></span>\n" +
                 "    </a>\n" +
                 "  <!--[if mso]></center></v:textbox></v:roundrect></td></tr></table><![endif]-->\n" +
