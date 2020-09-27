@@ -421,10 +421,10 @@ public class UsuarioController {
 
 
     //Modifica la contraseña del usuario
-    @PutMapping("/update-pass-otro-usuario/{id}")
+    @PutMapping("/update-pass-otro-usuario/{id}/{primerLogin}")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> modificarPasswordOtroUsuario(@Valid @RequestBody String pass, BindingResult result,
-                                                          @PathVariable Long id) {
+                                                          @PathVariable Long id, @PathVariable boolean primerLogin) {
 
         System.out.println("nuevo pass: " + pass);
 
@@ -459,6 +459,7 @@ public class UsuarioController {
             //Se encripta el nuevo password
             String nuevaPasswordEnc = passwordEncoder.encode(pass.trim());
             usuario.setPassword(nuevaPasswordEnc);
+            usuario.setPrimerLogin(primerLogin);
             usuarioUpdated = usuarioServiceObj.save(usuario);
 
         } catch (DataAccessException de) {
@@ -512,9 +513,18 @@ public class UsuarioController {
 
 
         try {
-            //Se encripta el nuevo password
+            //Se encripta el nuevo password BCRYPT
             String nuevaPasswordEnc = passwordEncoder.encode(pass.trim());
             usuario.setPassword(nuevaPasswordEnc);
+
+            //JSF NO FUNCIONAL
+/*            try{
+                String contrasena = DigestUtil.generateDigest(pass);
+                usuario.setPassword(contrasena);
+            } catch (NoSuchAlgorithmException  | UnsupportedEncodingException  ex) {
+                System.out.println("error al enc");
+            }*/
+
             usuario.setToken(null);
             usuario.setEstadoToken(null);
             usuario.setHoraToken(null);
