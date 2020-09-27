@@ -29,8 +29,10 @@ public class UsuarioService implements UsuarioServices,UserDetailsService {
 
     @Override
     @Transactional(readOnly = true)
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException,IndexOutOfBoundsException {
         System.out.println(username + "username ing");
+
+
         Usuario usuario = usuarioRepositoryObj.findAllByUsername(username).get(0);
         //Usuario usuario = usuarioRepositoryObj.findByNit()
 
@@ -88,14 +90,16 @@ public class UsuarioService implements UsuarioServices,UserDetailsService {
         return usuarioRepositoryObj.findByToken(token);
     }
 
+    @Override
+    public String obtenerRazonSocialUsuarioNuevo(String nit, String password) {
+        return usuarioRepositoryObj.obtenerRazonSocial(nit, password);
+    }
 
 
-
-
-
-
-
-
+    @Override
+    public Usuario findByValidarUsername(String username) {
+        return usuarioRepositoryObj.findByUsername(username);
+    }
 
     @Override
     public void sendMailRecuperarContrasena(Usuario usuario) throws FileNotFoundException {

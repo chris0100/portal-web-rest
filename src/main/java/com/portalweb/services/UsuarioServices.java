@@ -21,4 +21,8 @@ public interface UsuarioServices {
     void sendMailRecuperarContrasena(Usuario usuario) throws FileNotFoundException;
 
     Usuario findByToken(String token);
+
+    String obtenerRazonSocialUsuarioNuevo(String nit, String password);
+
+    Usuario findByValidarUsername(String username);
 }

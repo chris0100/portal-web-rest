@@ -596,6 +596,7 @@ public class UsuarioController {
 
 
 
+    //Realiza el procesamiento del token
     @GetMapping("/procesar-token/{token}")
     public List<String> procesarToken(@PathVariable String token){
         System.out.println("este es el token que se recibe: " + token);
@@ -627,6 +628,28 @@ public class UsuarioController {
             }
         }
         return resultados;
+    }
+
+
+
+    //Revisa si la contraseña es igual al nombre del usuario para saber si el usuario es nuevo
+    @GetMapping("/nit-password-usuario-nuevo/{nit}/{password}/{username}")
+    public List<String> nitPasswordUsuarioNuevo(@PathVariable String nit, @PathVariable String password, @PathVariable String username){
+        List<String> resultado = new ArrayList<>();
+        String razonSocial = usuarioServiceObj.obtenerRazonSocialUsuarioNuevo(nit, password);
+        Usuario nitConsulta = usuarioServiceObj.findByValidarUsername(username);
+
+        System.out.println(nitConsulta);
+        System.out.println(razonSocial);
+
+        try{
+            resultado.add(razonSocial);
+            resultado.add(nitConsulta.getUsername());
+        }catch (Exception e) {
+            resultado.add("error de datos");
+            return resultado;
+        }
+        return resultado;
     }
 
 
