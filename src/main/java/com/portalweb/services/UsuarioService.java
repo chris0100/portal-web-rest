@@ -101,6 +101,12 @@ public class UsuarioService implements UsuarioServices,UserDetailsService {
         return usuarioRepositoryObj.findByUsername(username);
     }
 
+
+    @Override
+    public Usuario findByCorreoRecuperarContra(String email, String nit, String sucursal, String puntoEnvio) {
+        return usuarioRepositoryObj.findByEmailAndNitAndIdSucursalAndIdPuntoEnvio(email, nit, sucursal, puntoEnvio);
+    }
+
     @Override
     public void sendMailRecuperarContrasena(Usuario usuario) throws FileNotFoundException {
         emailController = new EmailController();

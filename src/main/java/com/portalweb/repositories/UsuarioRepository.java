@@ -23,4 +23,6 @@ public interface UsuarioRepository extends CrudRepository<Usuario, Long> {
 
     Usuario findByUsername(String username);
 
+    Usuario findByEmailAndNitAndIdSucursalAndIdPuntoEnvio(String email, String nit, String sucursal, String puntoEnvio);
+
 }

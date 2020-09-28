@@ -550,9 +550,9 @@ public class UsuarioController {
 
 
     //Traer un solo usuario a traves del nit y el email
-    @GetMapping("/generar-token-usuario/{email}/{nit}")
+    @GetMapping("/generar-token-proveedor/{email}/{nit}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<?> obtenerUsuarioByEmailAndNit(@PathVariable String email, @PathVariable String nit) {
+    public ResponseEntity<?> obtenerUsuarioProveedorByEmailAndNit(@PathVariable String email, @PathVariable String nit) {
         //Se crean los obj de usuario y response
         Usuario usuario = null;
         Map<String, Object> response = new HashMap<>();
@@ -593,6 +593,60 @@ public class UsuarioController {
         //Si el usuario se encuentra
         return new ResponseEntity<Usuario>(usuario, HttpStatus.OK);
     }
+
+
+
+    //Traer un solo usuario a traves del nit y el email
+    @GetMapping("/generar-token-cliente/{email}/{nit}/{sucursal}/{puntoEnvio}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> obtenerUsuarioClienteByEmailAndNitAndSucursalAndPuntoEnvio(@PathVariable String email, @PathVariable String nit,
+                                                                  @PathVariable String sucursal, @PathVariable String puntoEnvio) {
+        //Se crean los obj de usuario y response
+        Usuario usuario = null;
+        Map<String, Object> response = new HashMap<>();
+
+        //Busca el cliente por id en la BD
+        try {
+            usuario = usuarioServiceObj.findByCorreoRecuperarContra(email, nit, sucursal, puntoEnvio);
+
+            //Si el usuario no aparece en la BD, envia response
+            if (usuario == null) {
+                response.put("mensaje", "El usuario no se encuentra en la Base de Datos");
+                return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+            }
+            else{
+                //Si el usuario se encuentra se genera el respectivo token
+                String token = UUID.randomUUID().toString().toUpperCase();
+                usuario.setToken(token);
+                usuario.setHoraToken(new Date());
+                usuario.setEstadoToken(true);
+
+                //Se guarda el usuario en la BD
+                usuarioServiceObj.save(usuario);
+
+
+                //Se envia correo electronico al usuario
+                usuarioServiceObj.sendMailRecuperarContrasena(usuario);
+            }
+
+        } catch (DataAccessException | FileNotFoundException de) {
+            response.put("mensaje", "Error al realizar la consulta en la Base de Datos");
+            response.put("error", de.getMessage());
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        //Si el usuario se encuentra
+        return new ResponseEntity<Usuario>(usuario, HttpStatus.OK);
+    }
+
+
+
+
+
+
+
+
+
 
 
 

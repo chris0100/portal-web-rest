@@ -18,6 +18,8 @@ public interface UsuarioServices {
 
     public List<Usuario> findAllByEmailAndNit(String email, String nit);
 
+    Usuario findByCorreoRecuperarContra(String email, String nit, String sucursal, String puntoEnvio);
+
     void sendMailRecuperarContrasena(Usuario usuario) throws FileNotFoundException;
 
     Usuario findByToken(String token);
