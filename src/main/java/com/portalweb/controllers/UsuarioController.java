@@ -102,11 +102,11 @@ public class UsuarioController {
         Connection con = DriverManager.getConnection(connectionUrl);
         Statement stm = null;
         String query = "SELECT c.f753_dato_texto \n" +
-                "  FROM [UnoEE].[dbo].[t201_mm_clientes] b \n" +
-                "  inner join [UnoEE].[dbo].t200_mm_terceros x  on x.f200_rowid = b.f201_rowid_tercero \n" +
-                "  inner join  [UnoEE].[dbo].t753_mm_movto_entidad_columna c on c.f753_rowid_movto_entidad=b.f201_rowid_movto_entidad \n" +
-                "  inner join [UnoEE].[dbo].t743_mm_entidad_atributo d on c.f753_rowid_entidad_atributo=d.f743_rowid \n" +
-                "  inner join [UnoEE].[dbo].t742_mm_entidad e on d.f743_rowid_entidad=e.f742_rowid \n" +
+                "  FROM [UnoEE_2].[dbo].[t201_mm_clientes] b \n" +
+                "  inner join [UnoEE_2].[dbo].t200_mm_terceros x  on x.f200_rowid = b.f201_rowid_tercero \n" +
+                "  inner join  [UnoEE_2].[dbo].t753_mm_movto_entidad_columna c on c.f753_rowid_movto_entidad=b.f201_rowid_movto_entidad \n" +
+                "  inner join [UnoEE_2].[dbo].t743_mm_entidad_atributo d on c.f753_rowid_entidad_atributo=d.f743_rowid \n" +
+                "  inner join [UnoEE_2].[dbo].t742_mm_entidad e on d.f743_rowid_entidad=e.f742_rowid \n" +
                 "  where  e.f742_etiqueta='HABILITAR PORTAL WEB' and d.f743_id='HABILITAR PORTAL WEB' and x.f200_nit = '" + nitCliente + "'\n" +
                 "  and b.f201_id_sucursal =" + sucursal + "order by c.f753_fecha_ts_actualizacion desc";
 
@@ -276,7 +276,7 @@ public class UsuarioController {
         usuario.setPassword(password);
 
         //Se leen los respectivos roles para que sean guardados en el usuario.
-        // Se traen de ANG los string con id_rol
+        // Se traen de ANGULAR los string con id_rol
         List<Role> listaRol = new ArrayList<>();
         for (String obj : usuario.getRolesPrincipal()) {
             Role roleEncontrado = roleRepositoryObj.findById(obj);
@@ -285,8 +285,12 @@ public class UsuarioController {
 
         //Se cargan los roles en el usuario
         usuario.setRoles(listaRol);
+        usuario.setIntentosBloqueo(3);
+
+        System.out.println(usuario);
 
         try {
+            //cambiar luego
             usuarioNuevo = usuarioServiceObj.save(usuario);
         } catch (DataAccessException e) {
             System.out.println("ha habido un error 2");

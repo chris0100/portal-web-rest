@@ -17,7 +17,7 @@ public interface UsuarioRepository extends CrudRepository<Usuario, Long> {
 
     Usuario findByToken(String token);
 
-    @Query(value = "SELECT top 1 f200_razon_social from [UnoEE].[dbo].[t200_mm_terceros] " +
+    @Query(value = "SELECT top 1 f200_razon_social from [UnoEE_2].[dbo].[t200_mm_terceros] " +
             "where f200_nit = ?1 and f200_nit = ?2", nativeQuery = true)
     String obtenerRazonSocial(String nit, String password);
 
