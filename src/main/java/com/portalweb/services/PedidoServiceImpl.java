@@ -138,9 +138,10 @@ public class PedidoServiceImpl implements PedidoService {
                 parametrosMail(pedido, usuario, listaItemPedido);
 
 
-                //Se arma la plantilla y se envia el email
+                //Se arma la plantilla y se envia email al cliente
                 sendMailCliente(usuario);
 
+                //Si hay errores, se envia email al asesor
                 System.out.println("valor conector " + valorConector);
                 if (valorConector == 1){
                     sendMailAsesor(pedido, emailAsesor);

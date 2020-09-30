@@ -712,6 +712,27 @@ public class UsuarioController {
 
 
 
+    //Se realiza la respectiva validacion para proveedor nuevo
+    @GetMapping("/nit-password-proveedor-nuevo/{nit}/{password}")
+    public List<String> nitPasswordProveedorNuevo(@PathVariable String nit, @PathVariable String password){
+        List<String> resultado = new ArrayList<>();
+        String razonSocial = usuarioServiceObj.nitContraseñaUsuarioNuevoProveedor(nit, password);
+        Usuario nitConsulta = usuarioServiceObj.findByValidarUsername(nit); //username es equivalente al nit en proveedor.
+
+        System.out.println(razonSocial);
+        System.out.println(nitConsulta);
+
+        try{
+            resultado.add(razonSocial);
+            resultado.add(nitConsulta.getUsername());
+        }catch (Exception e) {
+            resultado.add("error de datos");
+            return resultado;
+        }
+        return resultado;
+    }
+
+
 
 
 

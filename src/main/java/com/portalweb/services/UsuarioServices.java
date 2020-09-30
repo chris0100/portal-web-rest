@@ -27,4 +27,6 @@ public interface UsuarioServices {
     String obtenerRazonSocialUsuarioNuevo(String nit, String password);
 
     Usuario findByValidarUsername(String username);
+
+    String nitContraseñaUsuarioNuevoProveedor(String nit, String password);
 }

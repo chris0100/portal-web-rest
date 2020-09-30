@@ -25,4 +25,8 @@ public interface UsuarioRepository extends CrudRepository<Usuario, Long> {
 
     Usuario findByEmailAndNitAndIdSucursalAndIdPuntoEnvio(String email, String nit, String sucursal, String puntoEnvio);
 
+    @Query(value = "SELECT top 1 f200_razon_social from [UnoEE].[dbo].[t200_mm_terceros] where f200_nit = ?1 and f200_nit = ?2", nativeQuery = true)
+    String obtenerRazonSocialProveedorNuevo(String nit, String password);
+
+
 }

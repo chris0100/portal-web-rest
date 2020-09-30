@@ -74,7 +74,7 @@ public class ProveedorController {
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_GATEWAY);
         } else {
             // Se recarga la consulta IVA UNOEE
-            listaCertificadoRetencionIVA = unoEEServiceObj.recargarConsultarIvaUnoEE(mesInicio, mesFin, anioGrabable, 0);
+            listaCertificadoRetencionIVA = unoEEServiceObj.recargarConsultarIvaUnoEE(mesInicio, mesFin, anioGrabable, rowIdTercero);
             System.out.println(listaCertificadoRetencionIVA);
 
             if (listaCertificadoRetencionIVA.isEmpty()) {
@@ -109,7 +109,7 @@ public class ProveedorController {
         }
 
         //Recargar la consulta de la retencion
-        listaCertificadoRetencionIVA = unoEEServiceObj.recargarConsultarRetencion(anioGrabable, 0,
+        listaCertificadoRetencionIVA = unoEEServiceObj.recargarConsultarRetencion(anioGrabable, rowIdTercero,
                 ciudadConsignoParam, ciudadPracticoParam, tipoCertificado);
 
         if (listaCertificadoRetencionIVA.isEmpty()) {

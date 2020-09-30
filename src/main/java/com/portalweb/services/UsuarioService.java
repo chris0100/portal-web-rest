@@ -49,7 +49,7 @@ public class UsuarioService implements UsuarioServices,UserDetailsService {
         //Se carga la lista de roles.
         List<GrantedAuthority> authorities = usuario.getRoles()
                 .stream()
-                .map(role -> new SimpleGrantedAuthority(role.getNombre().trim()))
+                .map(role -> new SimpleGrantedAuthority(role.getId().trim()))
                 .peek(authority -> System.out.println("role: " + authority.getAuthority()))
                 .collect(Collectors.toList());
 
@@ -105,6 +105,12 @@ public class UsuarioService implements UsuarioServices,UserDetailsService {
     @Override
     public Usuario findByCorreoRecuperarContra(String email, String nit, String sucursal, String puntoEnvio) {
         return usuarioRepositoryObj.findByEmailAndNitAndIdSucursalAndIdPuntoEnvio(email, nit, sucursal, puntoEnvio);
+    }
+
+
+    @Override
+    public String nitContraseñaUsuarioNuevoProveedor(String nit, String password) {
+        return usuarioRepositoryObj.obtenerRazonSocialProveedorNuevo(nit, password);
     }
 
     @Override
