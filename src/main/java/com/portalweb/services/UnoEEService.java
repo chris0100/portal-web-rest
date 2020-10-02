@@ -41,4 +41,7 @@ public interface UnoEEService {
 
     List<CertificadoRetencionIVA> recargarConsultarRetencion(String anioGrabable, int rowIdTercero,
                                                              String ciudadConsignoParam, String ciudadPracticoParam, String tipoCertificado) throws SQLException;
+
+
+    List<ItemPedidoUnoEEController> recargarConsultarItemsPedidosUnoee(String nit, String sucursal) throws SQLException;
 }

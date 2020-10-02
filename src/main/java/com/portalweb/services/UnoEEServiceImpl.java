@@ -590,6 +590,47 @@ public class UnoEEServiceImpl implements UnoEEService {
 
 
 
+    //Llena de datos la lista de item pedidos de UNOEE (los primeros 10)
+    public List<ItemPedidoUnoEEController> recargarConsultarItemsPedidosUnoee(String nit, String sucursal)
+            throws SQLException {
+
+        String connectionUrl ="jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=BD_PortalWeb;user=sa;password=3K4$.2015$#";
+        Connection con = DriverManager.getConnection(connectionUrl);
+        Statement stmt = null;
+
+        String query = "exec BD_PortalWeb.dbo.sp_top_item_pedido '"+nit+"','"+sucursal+"'";
+
+        List<ItemPedidoUnoEEController> listaItemPedidosUnoee= new ArrayList<>();
+        ItemPedidoUnoEEController itemPedidoUnoee;
+
+        try {
+            stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+
+
+            //pasa los datos resultantes del query a un objeto de tipo itempedidounoee
+            while (rs.next()) {
+                itemPedidoUnoee = new ItemPedidoUnoEEController();
+                itemPedidoUnoee.setCodItem(rs.getString("codItem"));
+                itemPedidoUnoee.setDescripcion(rs.getString("descripcion"));
+                itemPedidoUnoee.setUnd(rs.getString("und"));
+                itemPedidoUnoee.setExt1(rs.getString("ext1"));
+                itemPedidoUnoee.setExt2(rs.getString("ext2"));
+                itemPedidoUnoee.setCantPedida(rs.getBigDecimal("cantPedida"));
+                listaItemPedidosUnoee.add(itemPedidoUnoee);
+            }
+            return listaItemPedidosUnoee;
+        } catch (SQLException e ) {
+            System.out.println("error "+e);
+            return new ArrayList<>();
+        } finally {
+            if (stmt != null) { stmt.close(); }
+        }
+    }
+
+
+
+
 
 
 }

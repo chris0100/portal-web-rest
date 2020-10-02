@@ -563,4 +563,11 @@ public class PedidoController {
     //*************************************************
 
 
+    //Obtener el top 10 de items en el panel principal
+    @GetMapping("/recargar-consulta-items-unoee/{nit}/{sucursal}")
+    public List<ItemPedidoUnoEEController> recargarConsultaItemsPedidoUnoEE(@PathVariable String nit, @PathVariable String sucursal) throws SQLException {
+        return unoEEServiceObj.recargarConsultarItemsPedidosUnoee(nit, sucursal);
+    }
+
+
 }

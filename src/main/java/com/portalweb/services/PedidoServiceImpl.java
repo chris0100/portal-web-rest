@@ -210,7 +210,7 @@ public class PedidoServiceImpl implements PedidoService {
         /////////////////////////////////////////////////////////////////////
         //RECORDAR CAMBIAR AL FINAL PARA QUE ENVIE EL CORREO AL ASESOR
         /////////////////////////////////////////////////////////////////////
-        //emailController.sendMail(emailAsesor, asunto, cuerpo);
+        emailController.sendMail(emailAsesor, asunto, cuerpo);
     }
 
 

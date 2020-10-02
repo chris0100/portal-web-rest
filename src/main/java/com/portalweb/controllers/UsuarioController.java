@@ -290,7 +290,7 @@ public class UsuarioController {
         System.out.println(usuario);
 
         try {
-            //cambiar luego
+
             usuarioNuevo = usuarioServiceObj.save(usuario);
         } catch (DataAccessException e) {
             System.out.println("ha habido un error 2");
