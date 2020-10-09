@@ -8,8 +8,6 @@ import com.portalweb.models.Usuario;
 import com.portalweb.services.ItemPedidoService;
 import com.portalweb.services.PedidoService;
 import com.portalweb.services.UnoEEService;
-import com.portalweb.soapunoee.Test;
-import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -25,10 +23,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -237,6 +231,7 @@ public class PedidoController {
             System.out.println("Este es el borrador a crear " + pedido.toString());
             System.out.println("***********************************************");
 
+            
             // Se asigna fecha actual
             pedido.setFechaPedido(new Date());
 
