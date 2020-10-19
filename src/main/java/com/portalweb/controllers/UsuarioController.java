@@ -36,8 +36,16 @@ public class UsuarioController {
     String connectionUrl = "jdbc:sqlserver://192.168.160.153\\EKACORP;databaseName=BD_PortalWeb_2;user=sa;password=3K4$.2015$#";
 
 
+    @GetMapping("/api")
+    public List<String> rutaApi(){
+        List<String> listado = new ArrayList<>();
+        listado.add("estado");
+        return listado;
+    }
+
+
     // Obtiene la sucursal a traves del nit
-    @GetMapping("/obtener-sucursal/{nitCliente}")
+    @GetMapping("/api/obtener-sucursal/{nitCliente}")
     public ResponseEntity<?> obtenerSucursal(@PathVariable String nitCliente) throws SQLException {
         List<String> listadoSucursal = new ArrayList<>();
 
@@ -67,7 +75,7 @@ public class UsuarioController {
 
 
     //Permite obtener el punto de envio con el nit y la sucursal
-    @GetMapping("/obtener-punto-envio/{nitCliente}/{sucursal}")
+    @GetMapping("/api/obtener-punto-envio/{nitCliente}/{sucursal}")
     public ResponseEntity<?> obtenerPuntoEnvio(@PathVariable String nitCliente, @PathVariable String sucursal) throws SQLException {
         List<String> listadoPuntoEnvio = new ArrayList<>();
 
@@ -94,7 +102,7 @@ public class UsuarioController {
 
 
     // Valida si la entidad dinamica esta habilitada
-    @GetMapping("/validar-entidad-dinamica/{nitCliente}/{sucursal}")
+    @GetMapping("/api/validar-entidad-dinamica/{nitCliente}/{sucursal}")
     public ResponseEntity<?> validarEntidadDinamica(@PathVariable String nitCliente, @PathVariable String sucursal) throws SQLException {
 
         List<String> respuestaHabilitada = new ArrayList<>();
@@ -129,7 +137,7 @@ public class UsuarioController {
 
 
     //Actualizar datos de configuracion del usuario logueado
-    @PutMapping("/update-cliente/{id}")
+    @PutMapping("/api/update-cliente/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> update(@Valid @RequestBody Usuario usuario, BindingResult result, @PathVariable Long id) {
 
@@ -179,7 +187,7 @@ public class UsuarioController {
 
 
     //Modifica la contraseña del usuario
-    @PutMapping("/update-pass-cliente/{id}")
+    @PutMapping("/api/update-pass-cliente/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> modificarPassword(@Valid @RequestBody String[] pass, BindingResult result,
                                                @PathVariable Long id) {
@@ -244,7 +252,7 @@ public class UsuarioController {
 
 
     //Creacion de usuario
-    @PostMapping("/crear-usuario")
+    @PostMapping("/api/crear-usuario")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> addUsuario(@Valid @RequestBody Usuario usuario, BindingResult result) {
 
@@ -309,7 +317,7 @@ public class UsuarioController {
 
 
     //Traer lista de usuarios
-    @GetMapping("/listar-usuarios")
+    @GetMapping("/api/listar-usuarios")
     public List<Usuario> listarUsuarios() {
         return usuarioServiceObj.findAll();
     }
@@ -318,7 +326,7 @@ public class UsuarioController {
 
 
     //Traer un solo usuario a traves del id
-    @GetMapping("/obtener-usuario/{id}")
+    @GetMapping("/api/obtener-usuario/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> obtenerUsuario(@PathVariable Long id) {
 
@@ -350,7 +358,7 @@ public class UsuarioController {
 
 
     //Actualizar otro usuario desde Admin
-    @PutMapping("/editar-otro-usuario/{id}")
+    @PutMapping("/api/editar-otro-usuario/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> actualizarOtroUsuario(@Valid @RequestBody Usuario usuario, BindingResult result, @PathVariable Long id) {
 
@@ -425,7 +433,7 @@ public class UsuarioController {
 
 
     //Modifica la contraseña del usuario
-    @PutMapping("/update-pass-otro-usuario/{id}/{primerLogin}")
+    @PutMapping("/api/update-pass-otro-usuario/{id}/{primerLogin}")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> modificarPasswordOtroUsuario(@Valid @RequestBody String pass, BindingResult result,
                                                           @PathVariable Long id, @PathVariable boolean primerLogin) {
@@ -483,7 +491,7 @@ public class UsuarioController {
 
 
     //Modifica la contraseña del usuario
-    @PutMapping("/reestablecer-password/{token}")
+    @PutMapping("/api/reestablecer-password/{token}")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> reestablecerPassword(@Valid @RequestBody String pass, BindingResult result,@PathVariable String token) {
 
@@ -554,7 +562,7 @@ public class UsuarioController {
 
 
     //Traer un solo usuario a traves del nit y el email
-    @GetMapping("/generar-token-proveedor/{email}/{nit}")
+    @GetMapping("/api/generar-token-proveedor/{email}/{nit}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> obtenerUsuarioProveedorByEmailAndNit(@PathVariable String email, @PathVariable String nit) {
         //Se crean los obj de usuario y response
@@ -564,9 +572,19 @@ public class UsuarioController {
 
         //Busca el cliente por id en la BD
         try {
-            listaUsuarioEncontrado = usuarioServiceObj.findAllByEmailAndNit(email, nit);
-            System.out.println(listaUsuarioEncontrado.size());
-            usuario = listaUsuarioEncontrado.get(0);
+            // verifica si el usuario tiene el nit como username
+            Usuario usuarioNitUsername = usuarioServiceObj.findByUsername(nit);
+
+            System.out.println(usuarioNitUsername);
+            if(usuarioNitUsername != null) {
+                usuario = usuarioNitUsername;
+            }
+            else {
+                listaUsuarioEncontrado = usuarioServiceObj.findAllByEmailAndNit(email, nit);
+                System.out.println(listaUsuarioEncontrado.size());
+                usuario = listaUsuarioEncontrado.get(0);
+            }
+
 
             //Si el usuario no aparece en la BD, envia response
             if (usuario == null) {
@@ -601,7 +619,7 @@ public class UsuarioController {
 
 
     //Traer un solo usuario a traves del nit y el email
-    @GetMapping("/generar-token-cliente/{email}/{nit}/{sucursal}/{puntoEnvio}")
+    @GetMapping("/api/generar-token-cliente/{email}/{nit}/{sucursal}/{puntoEnvio}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> obtenerUsuarioClienteByEmailAndNitAndSucursalAndPuntoEnvio(@PathVariable String email, @PathVariable String nit,
                                                                   @PathVariable String sucursal, @PathVariable String puntoEnvio) {

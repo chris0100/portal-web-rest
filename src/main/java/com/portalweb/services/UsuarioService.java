@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class UsuarioService implements UsuarioServices,UserDetailsService {
+public class UsuarioService implements UsuarioServices, UserDetailsService {
 
     @Autowired
     private UsuarioRepository usuarioRepositoryObj;
@@ -29,7 +29,7 @@ public class UsuarioService implements UsuarioServices,UserDetailsService {
 
     @Override
     @Transactional(readOnly = true)
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException,IndexOutOfBoundsException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, IndexOutOfBoundsException {
         System.out.println(username + "username ing");
 
 
@@ -40,7 +40,7 @@ public class UsuarioService implements UsuarioServices,UserDetailsService {
             System.out.println("datos usuario: " + usuario.getUsername() + ": " + usuario.getNombre() + ": " + usuario.getPassword() + ":" + usuario.getId());
         }
 
-        if (usuario == null){
+        if (usuario == null) {
             System.out.println("Usuario no existe");
             throw new UsernameNotFoundException("Error: no existe el usuario");
         }
@@ -57,11 +57,16 @@ public class UsuarioService implements UsuarioServices,UserDetailsService {
                 true, true, authorities);
     }
 
-    
+
     @Override
     @Transactional(readOnly = true)
     public Usuario findByUsername(String username) {
-        return usuarioRepositoryObj.findAllByUsername(username).get(0);
+        try {
+            return usuarioRepositoryObj.findAllByUsername(username).get(0);
+        }
+        catch(Exception e) {
+            return null;
+        }
     }
 
 
@@ -444,7 +449,7 @@ public class UsuarioService implements UsuarioServices,UserDetailsService {
                 "                    <div class=\"\">\n" +
                 "	<!--[if mso]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td style=\"padding-right: 0px; padding-left: 5px; padding-top: 0px; padding-bottom: 20px;\"><![endif]-->\n" +
                 "	<div style=\"color:#555555;font-family:'Open Sans', Helvetica, Arial, sans-serif;line-height:150%; padding-right: 0px; padding-left: 5px; padding-top: 0px; padding-bottom: 20px;\">	\n" +
-                "		<div style=\"font-size:12px;line-height:18px;font-family:'Open Sans', Helvetica, Arial, sans-serif;color:#555555;text-align:left;\"><p style=\"margin: 0;font-size: 14px;line-height: 21px\">Hola "+usuario.getNombre()+", Si solicitaste un restablecimiento de contrase&#241a, haz clic en el bot&#243n que aparece a continuaci&#243n. Si no solicitaste esto, ignora este correo electr&#243nico.</p></div>	\n" +
+                "		<div style=\"font-size:12px;line-height:18px;font-family:'Open Sans', Helvetica, Arial, sans-serif;color:#555555;text-align:left;\"><p style=\"margin: 0;font-size: 14px;line-height: 21px\">Hola " + usuario.getNombre() + ", Si solicitaste un restablecimiento de contrase&#241a, haz clic en el bot&#243n que aparece a continuaci&#243n. Si no solicitaste esto, ignora este correo electr&#243nico.</p></div>	\n" +
                 "	</div>\n" +
                 "	<!--[if mso]></td></tr></table><![endif]-->\n" +
                 "</div>\n" +
@@ -453,7 +458,7 @@ public class UsuarioService implements UsuarioServices,UserDetailsService {
                 "                    \n" +
                 "<div align=\"left\" class=\"button-container left \" style=\"padding-right: 0px; padding-left: 0px; padding-top:0px; padding-bottom:0px;\">\n" +
                 "  <!--[if mso]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;\"><tr><td style=\"padding-right: 0px; padding-left: 0px; padding-top:0px; padding-bottom:0px;\" align=\"left\"><v:roundrect xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:w=\"urn:schemas-microsoft-com:office:word\" href=\"link\" style=\"height:31pt; v-text-anchor:middle; width:172pt;\" arcsize=\"3%\" strokecolor=\"#0068A5\" fillcolor=\"#0068A5\"><w:anchorlock/><v:textbox inset=\"0,0,0,0\"><center style=\"color:#FFFFFF; font-family:'Open Sans', Helvetica, Arial, sans-serif; font-size:16px;\"><![endif]-->\n" +
-                "    <a href=\"http://192.168.160.156:8089/procesar-token/"+usuario.getToken()+"\" target=\"_blank\" style=\"display: block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #0068A5; border-radius: 1px; -webkit-border-radius: 1px; -moz-border-radius: 1px; max-width: 230px; width: 190px;width: auto; border-top: 0px solid transparent; border-right: 0px solid transparent; border-bottom: 0px solid transparent; border-left: 0px solid transparent; padding-top: 5px; padding-right: 20px; padding-bottom: 5px; padding-left: 20px; font-family: 'Open Sans', Helvetica, Arial, sans-serif;mso-border-alt: none\">\n" +
+                "    <a href=\"http://portalweb.ekacorp.com.co/procesar-token/" + usuario.getToken() + "\" target=\"_blank\" style=\"display: block;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #0068A5; border-radius: 1px; -webkit-border-radius: 1px; -moz-border-radius: 1px; max-width: 230px; width: 190px;width: auto; border-top: 0px solid transparent; border-right: 0px solid transparent; border-bottom: 0px solid transparent; border-left: 0px solid transparent; padding-top: 5px; padding-right: 20px; padding-bottom: 5px; padding-left: 20px; font-family: 'Open Sans', Helvetica, Arial, sans-serif;mso-border-alt: none\">\n" +
                 "      <span style=\"font-family:'Open Sans', Helvetica, Arial, sans-serif;font-size:16px;line-height:32px;\"><span style=\"font-size: 15px; line-height: 30px;\"><strong>Restablecer contrase&#241a</strong></span></span>\n" +
                 "    </a>\n" +
                 "  <!--[if mso]></center></v:textbox></v:roundrect></td></tr></table><![endif]-->\n" +
@@ -488,9 +493,6 @@ public class UsuarioService implements UsuarioServices,UserDetailsService {
                 "</body></html>";
         emailController.sendMail(usuario.getEmail(), asunto, cuerpo);
     }
-
-
-
 
 
 }

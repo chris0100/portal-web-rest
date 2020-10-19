@@ -12,8 +12,11 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 @EnableResourceServer
@@ -25,26 +28,26 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/obtener-sucursal/**", "/obtener-punto-envio/**",
-                        "/validar-entidad-dinamica/**", "/listar-usuarios", "/obtener-usuario/**", "/listar-pedidos",
-                        "/listar-pedidos-borrador/**", "/listar-pedidos-verificacion/**", "/listar-historial-pedidos/**", "/obtener-lista-items-pedidoUnoEE/**",
-                        "/obtener-lista-items-vb/**", "/obtener-punto-envio/**", "/contar-mostrar-panel/**", "/lista-item-patron",
-                        "/tipo-extensiones/**", "/ext1/**" ,"/ext2/**", "/unidad-inventario/**", "/decimales-unidad-inventario/**",
-                        "/consulta-descripcion-label-ext1/**", "/consulta-descripcion-label-ext2/**", "/obtener-bodega-item/**" ,
-                        "/contar-homologar-item-duplicado/**", "/obtener-datos-asesor-unoee/**", "/obtener-conector",
-                        "/tratamiento-lista-items-excel", "/obtener-lista-ext1/**", "/obtener-lista-ext2/**", "/obtener-datos-item/**",
-                        "/obtener-disponible-item/**", "/obtener-lista-pedido-error-asesor/**", "/obtener-lista-pedido-error",
-                        "/sincronizar-items/**", "/sincronizar-bodega-item/**", "/sincronizar-precio-ecuador/**",
-                        "/obtener-conector-error/**", "/obtener-row-id-tercero/**", "/crear-pdf-iva/**", "/crear-pdf-retencion/**",
-                        "/generar-token-proveedor/**", "/procesar-token/**", "/nit-password-usuario-nuevo/**",
-                        "/generar-token-cliente/**", "/nit-password-proveedor-nuevo/**", "/recargar-consulta-items-unoee/**")
+                .antMatchers(HttpMethod.GET, "/api/obtener-sucursal/**", "/api/obtener-punto-envio/**",
+                        "/api/validar-entidad-dinamica/**", "/api/listar-usuarios", "/api/obtener-usuario/**", "/api/listar-pedidos",
+                        "/api/listar-pedidos-borrador/**", "/api/listar-pedidos-verificacion/**", "/api/listar-historial-pedidos/**", "/api/obtener-lista-items-pedidoUnoEE/**",
+                        "/api/obtener-lista-items-vb/**", "/api/obtener-punto-envio/**", "/api/contar-mostrar-panel/**", "/api/lista-item-patron",
+                        "/api/tipo-extensiones/**", "/api/ext1/**" ,"/api/ext2/**", "/api/unidad-inventario/**", "/api/decimales-unidad-inventario/**",
+                        "/api/consulta-descripcion-label-ext1/**", "/api/consulta-descripcion-label-ext2/**", "/api/obtener-bodega-item/**" ,
+                        "/api/contar-homologar-item-duplicado/**", "/api/obtener-datos-asesor-unoee/**", "/api/obtener-conector",
+                        "/api/tratamiento-lista-items-excel", "/api/obtener-lista-ext1/**", "/api/obtener-lista-ext2/**", "/api/obtener-datos-item/**",
+                        "/api/obtener-disponible-item/**", "/api/obtener-lista-pedido-error-asesor/**", "/api/obtener-lista-pedido-error",
+                        "/api/sincronizar-items/**", "/api/sincronizar-bodega-item/**", "/api/sincronizar-precio-ecuador/**",
+                        "/api/obtener-conector-error/**", "/api/obtener-row-id-tercero/**", "/api/crear-pdf-iva/**", "/api/crear-pdf-retencion/**",
+                        "/api/generar-token-proveedor/**", "/api/procesar-token/**", "/api/nit-password-usuario-nuevo/**",
+                        "/api/generar-token-cliente/**", "/api/nit-password-proveedor-nuevo/**", "/api/recargar-consulta-items-unoee/**", "/api/**")
                 .permitAll()
-                .antMatchers(HttpMethod.PUT, "/update-cliente/**", "/update-pass-cliente/**","/editar-otro-usuario/**","/update-pass-otro-usuario/**",
-                        "/reestablecer-password/**")
+                .antMatchers(HttpMethod.PUT, "/api/update-cliente/**", "/api/update-pass-cliente/**","/api/editar-otro-usuario/**","/api/update-pass-otro-usuario/**",
+                        "/api/reestablecer-password/**", "/api/**")
                 .permitAll()
-                .antMatchers(HttpMethod.POST, "/crear-usuario/**", "/add-pedido-borrador", "/editar-item-pedido-error")
+                .antMatchers(HttpMethod.POST, "/api/crear-usuario/**", "/api/add-pedido-borrador", "/api/editar-item-pedido-error")
                 .permitAll()
-                .antMatchers(HttpMethod.DELETE, "/eliminar-pedido-borrador/**", "/eliminar-item-borrador/**")
+                .antMatchers(HttpMethod.DELETE, "/api/eliminar-pedido-borrador/**", "/api/eliminar-item-borrador/**")
                 .permitAll()
                 /*.antMatchers(HttpMethod.GET, "").hasAnyRole("USER","ADMIN")
                 .antMatchers(HttpMethod.POST, "").hasAnyRole("USER","ADMIN")
@@ -60,7 +63,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource(){
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200","*"));
+        configuration.setAllowedOrigins(Collections.singletonList("*"));
         configuration.setAllowedMethods(Arrays.asList("GET","POST","PUT","DELETE","OPTIONS"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(Arrays.asList("Content-Type", "Authorization"));

@@ -40,28 +40,28 @@ public class PedidoController {
 
 
     //Obtiene la lista de los pedidos
-    @GetMapping("/listar-pedidos")
+    @GetMapping("/api/listar-pedidos")
     public List<Pedido> listarPedidos() {
         return pedidoServiceObj.listaPedidos();
     }
 
 
     //Obtener la lista de pedidos en borrador
-    @GetMapping("/listar-pedidos-borrador/{nit}")
+    @GetMapping("/api/listar-pedidos-borrador/{nit}")
     public List<Pedido> listarPedidosBorrador(@PathVariable String nit) {
         return pedidoServiceObj.listarPedidosBorrador(nit, (short) 0);
     }
 
 
     //Obtener la lista de pedidos en verificacion
-    @GetMapping("/listar-pedidos-verificacion/{nit}")
+    @GetMapping("/api/listar-pedidos-verificacion/{nit}")
     public List<Pedido> listarPedidosVerificacion(@PathVariable String nit) {
         return pedidoServiceObj.listarPedidosVerificacion(nit, (short) 1);
     }
 
 
     //Obtener lista de items de verificacion
-    @GetMapping("/obtener-lista-items-vb/{idPedido}")
+    @GetMapping("/api/obtener-lista-items-vb/{idPedido}")
     public Pedido listaItemPedidos(@PathVariable Long idPedido) {
         Pedido pedidoActual = pedidoServiceObj.findById(idPedido);
         System.out.println(pedidoActual.getListaItemPedido().size());
@@ -70,7 +70,7 @@ public class PedidoController {
 
 
     //Obtener la lista del historial de pedidos
-    @GetMapping("/listar-historial-pedidos/{nit}/{fechaParametro1}/{fechaParametro2}")
+    @GetMapping("/api/listar-historial-pedidos/{nit}/{fechaParametro1}/{fechaParametro2}")
     public List<PedidoUnoeeController> listarHistorialPedidos(@PathVariable String nit,
                                                               @PathVariable String fechaParametro1,
                                                               @PathVariable String fechaParametro2) throws SQLException {
@@ -86,7 +86,7 @@ public class PedidoController {
 
 
     //Obtener la lista de item de acuerdo al rowId del pedidoUnoEE del cliente
-    @GetMapping("/obtener-lista-items-pedidoUnoEE/{rowId}")
+    @GetMapping("/api/obtener-lista-items-pedidoUnoEE/{rowId}")
     public List<ItemPedidoUnoEEController> listaItemsPedido(@PathVariable int rowId) throws SQLException {
         List<ItemPedidoUnoEEController> listaItemsPedido = unoEEServiceObj.listaItemsByRowId(rowId);
         return listaItemsPedido;
@@ -94,7 +94,7 @@ public class PedidoController {
 
 
     //Obtener punto de envio de acuerdo al nit y la sucursal
-    @GetMapping("/obtener-punto-envio/{nit}/{idSucursal}/{idPuntoEnvio}")
+    @GetMapping("/api/obtener-punto-envio/{nit}/{idSucursal}/{idPuntoEnvio}")
     public List<String> obtenerPuntoEnvio(@PathVariable String nit, @PathVariable String idSucursal, @PathVariable String idPuntoEnvio) {
         List<String> lista = new ArrayList<>();
         lista.add(pedidoServiceObj.obtenerPuntoEnvio(nit, idSucursal, idPuntoEnvio));
@@ -105,7 +105,7 @@ public class PedidoController {
     //Cuenta el item homologado para saber que pestaña habilitar en la pagina crear pedido
     //homologado = tiene su propio codigo de cliente.
     //no homologado = realiza la busqueda por codigo de barras.
-    @GetMapping("/contar-mostrar-panel/{nit}")
+    @GetMapping("/api/contar-mostrar-panel/{nit}")
     public List<Integer> contarMostrarPanel(@PathVariable String nit) {
         List<Integer> lista = new ArrayList<>();
         lista.add(itemPedidoServiceObj.contarMostrarPanel(nit));
@@ -115,49 +115,49 @@ public class PedidoController {
 
 
     //Consulta la lista item Patron para mostrar os items disponibles
-    @GetMapping("/lista-item-patron")
+    @GetMapping("/api/lista-item-patron")
     public List<String> listaItemPatron() {
         return itemPedidoServiceObj.obtenerListaItemPatron();
     }
 
 
     // Consultar el tipo de extensiones
-    @GetMapping("/tipo-extensiones/{idItem}")
+    @GetMapping("/api/tipo-extensiones/{idItem}")
     public List<String> consultaTipoExtensiones(@PathVariable String idItem) {
         return itemPedidoServiceObj.consultaTipoExtensiones(Integer.parseInt(idItem));
     }
 
 
     //Consulta Ext1(TAMAÑO)
-    @GetMapping("/ext1/{tipoExt}")
+    @GetMapping("/api/ext1/{tipoExt}")
     public List<String> consultaExt1(@PathVariable String tipoExt) {
         return itemPedidoServiceObj.consultaExt1(tipoExt);
     }
 
 
     //Consulta Ext2(COLOR)
-    @GetMapping("/ext2/{tipoExt}")
+    @GetMapping("/api/ext2/{tipoExt}")
     public List<String> consultaExt2(@PathVariable String tipoExt) {
         return itemPedidoServiceObj.consultaExt2(tipoExt);
     }
 
 
     //Consultar unidad inventario
-    @GetMapping("/unidad-inventario/{idItem}")
+    @GetMapping("/api/unidad-inventario/{idItem}")
     public List<String> consultaUnidadInventario(@PathVariable String idItem) {
         return itemPedidoServiceObj.consultaUnidadInventario(Integer.parseInt(idItem));
     }
 
 
     //Consulta decimales unidad inventario
-    @GetMapping("/decimales-unidad-inventario/{unidadMedida}")
+    @GetMapping("/api/decimales-unidad-inventario/{unidadMedida}")
     public List<String> consultaDecimalesUnidadInventario(@PathVariable String unidadMedida) {
         return itemPedidoServiceObj.consultaDecimalesUnidadInventario(unidadMedida);
     }
 
 
     //Consulta descripcion label ext1
-    @GetMapping("/consulta-descripcion-label-ext1/{tipoExt}")
+    @GetMapping("/api/consulta-descripcion-label-ext1/{tipoExt}")
     public List<String> consultaDescripcionLabelExt1(@PathVariable String tipoExt) {
         List<String> listaExt1 = itemPedidoServiceObj.consultaDescripcionLabelExt1(tipoExt);
         String ext1 = "";
@@ -171,7 +171,7 @@ public class PedidoController {
 
 
     //Consulta descripcion label ext2
-    @GetMapping("/consulta-descripcion-label-ext2/{tipoExt}")
+    @GetMapping("/api/consulta-descripcion-label-ext2/{tipoExt}")
     public List<String> consultaDescripcionLabelExt2(@PathVariable String tipoExt) {
         List<String> listaExt2 = itemPedidoServiceObj.consultaDescripcionLabelExt2(tipoExt);
         String ext2 = "";
@@ -185,7 +185,7 @@ public class PedidoController {
 
 
     // Obtener Bodega Item
-    @GetMapping("/obtener-bodega-item/{idItem}")
+    @GetMapping("/api/obtener-bodega-item/{idItem}")
     public List<String> obtenerBodegaItem(@PathVariable String idItem) throws SQLException {
         List<String> listaBodegaItem = new ArrayList<>();
         listaBodegaItem.add(unoEEServiceObj.obtenerBodegaItem(Integer.parseInt(idItem)));
@@ -197,14 +197,14 @@ public class PedidoController {
     //**********************************************************************
     // RECORDAR CAMBIAR PARA NIT
     //**********************************************************************
-    @GetMapping("/contar-homologar-item-duplicado/{nit}/{codCliente}")
+    @GetMapping("/api/contar-homologar-item-duplicado/{nit}/{codCliente}")
     public List<String> contarHomologarItemDuplicado(@PathVariable String nit, @PathVariable String codCliente) {
         return itemPedidoServiceObj.contarHomologarItemDuplicado(nit.trim(), codCliente);
     }
 
 
     // Guardar el pedido borrador en la base de datos
-    @PostMapping("/add-pedido-borrador")
+    @PostMapping("/api/add-pedido-borrador")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> addPedidoBorrador(@Valid @RequestBody Pedido pedido, BindingResult result) {
 
@@ -254,14 +254,14 @@ public class PedidoController {
 
 
     //Obtener datos del asesor UnoEE
-    @GetMapping("/obtener-datos-asesor-unoee/{idSucursal}/{nit}")
+    @GetMapping("/api/obtener-datos-asesor-unoee/{idSucursal}/{nit}")
     public List<String> obtenerDatosAsesorUnoEE(@PathVariable String idSucursal, @PathVariable String nit) throws SQLException {
         return unoEEServiceObj.obtenerDatosAsesorUnoEE(idSucursal, nit);
     }
 
 
     //Obtener el conector a partir del id del pedido
-    @PostMapping("/obtener-conector")
+    @PostMapping("/api/obtener-conector")
     public List<String> obtenerConectorPedido(@Valid @RequestBody Pedido pedido) throws Exception {
 
         System.out.println("aqui ingresa el pedido " + pedido);
@@ -293,7 +293,7 @@ public class PedidoController {
 
 
     //Obtener el conector a partir del id del pedido
-    @PostMapping("/obtener-conector-error")
+    @PostMapping("/api/obtener-conector-error")
     public List<String> obtenerConectorPedidoError(@Valid @RequestBody Pedido pedido) throws Exception {
 
         //Obtiene el conector en forma de lista y lo convierte a un solo string
@@ -330,7 +330,7 @@ public class PedidoController {
 
 
     // Se realiza el tratamiento de los datos enviados por excel
-    @PostMapping("/tratamiento-lista-items-excel")
+    @PostMapping("/api/tratamiento-lista-items-excel")
     public List<String> tratamientoListaItemsExcel(@Valid @RequestBody List<ItemExcel> listaItemsExcel) {
 
         List<String> resultadoBusquedaItems = new ArrayList<>();
@@ -367,7 +367,7 @@ public class PedidoController {
 
 
     //Eliminar un pedido en borrador
-    @DeleteMapping("/eliminar-pedido-borrador/{id}")
+    @DeleteMapping("/api/eliminar-pedido-borrador/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletePedidoBorrador(@PathVariable Long id) {
         pedidoServiceObj.deletePedidoBorradorById(id);
@@ -375,7 +375,7 @@ public class PedidoController {
 
 
     //Eliminar el item de un borrador
-    @DeleteMapping("/eliminar-item-borrador/{id}")
+    @DeleteMapping("/api/eliminar-item-borrador/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteItemBorrador(@PathVariable Long id) {
         itemPedidoServiceObj.deleteItemBorrador(id);
@@ -383,28 +383,28 @@ public class PedidoController {
 
 
     //Consultar lista ext1 - se usa en ventana validar item creado - para ese respectivo coditem
-    @GetMapping("/obtener-lista-ext1/{codItem}")
+    @GetMapping("/api/obtener-lista-ext1/{codItem}")
     public List<String> obtenerListaExt1(@PathVariable int codItem) throws SQLException {
         return unoEEServiceObj.obtenerListaExt1(codItem);
     }
 
 
     //Consultar lista ext2 - se usa en ventana validar item creado - para ese respectivo coditem
-    @GetMapping("/obtener-lista-ext2/{codItem}")
+    @GetMapping("/api/obtener-lista-ext2/{codItem}")
     public List<String> obtenerListaExt2(@PathVariable int codItem) throws SQLException {
         return unoEEServiceObj.obtenerListaExt2(codItem);
     }
 
 
     //Obtener datos del item - se usa en ventana validar item creado
-    @GetMapping("/obtener-datos-item/{codItem}")
+    @GetMapping("/api/obtener-datos-item/{codItem}")
     public List<String> obtenerDatosItem(@PathVariable int codItem) throws SQLException {
         return unoEEServiceObj.obtenerDatosItem(codItem);
     }
 
 
     //Obtener datos del item con codItem,ext1,ext2 - se usa en ventana validar item
-    @GetMapping("/obtener-datos-item/{codItem}/{ext1}/{ext2}")
+    @GetMapping("/api/obtener-datos-item/{codItem}/{ext1}/{ext2}")
     public List<String> obtenerDatosItemCompleto(@PathVariable int codItem,
                                                  @PathVariable String ext1,
                                                  @PathVariable String ext2) throws SQLException {
@@ -413,7 +413,7 @@ public class PedidoController {
 
 
     //Obtener disponible item 3 params
-    @GetMapping("/obtener-disponible-item/{codItem}/{ext1}/{ext2}")
+    @GetMapping("/api/obtener-disponible-item/{codItem}/{ext1}/{ext2}")
     public List<String> obtenerDiponibleItem(@PathVariable int codItem,
                                              @PathVariable String ext1,
                                              @PathVariable String ext2) throws SQLException {
@@ -424,7 +424,7 @@ public class PedidoController {
 
 
     //Obtener disponible item 1 param
-    @GetMapping("/obtener-disponible-item/{codItem}")
+    @GetMapping("/api/obtener-disponible-item/{codItem}")
     public List<String> obtenerDiponibleItem(@PathVariable int codItem) throws SQLException {
         List<String> resultado = new ArrayList<>();
         resultado.add(unoEEServiceObj.obtenerDisponibleItem(codItem) + "");
@@ -437,21 +437,21 @@ public class PedidoController {
     //*************************************************
 
     //Obtener lista Pedido error asesor
-    @GetMapping("/obtener-lista-pedido-error-asesor/{nit}")
+    @GetMapping("/api/obtener-lista-pedido-error-asesor/{nit}")
     public List<Pedido> obtenerListaPedidoErrorAsesor(@PathVariable String nit) {
         return pedidoServiceObj.obtenerPedidoEstadoAsesor(nit);
     }
 
 
     //Obtener lista Pedido error
-    @GetMapping("/obtener-lista-pedido-error")
+    @GetMapping("/api/obtener-lista-pedido-error")
     public List<Pedido> obtenerListaPedidoError() {
         return pedidoServiceObj.obtenerPedidoEstado();
     }
 
 
     //Realizar sincronizacion de items del pedido
-    @GetMapping("/sincronizar-items/{idPedido}/{nit}")
+    @GetMapping("/api/sincronizar-items/{idPedido}/{nit}")
     public List<String> ejecutarSincronizarItems(@PathVariable String idPedido, @PathVariable String nit) {
         List<String> listado = new ArrayList<>();
 
@@ -467,7 +467,7 @@ public class PedidoController {
 
 
     // Obtener Bodega Item
-    @GetMapping("/sincronizar-bodega-item/{idItem}/{codItem}")
+    @GetMapping("/api/sincronizar-bodega-item/{idItem}/{codItem}")
     public List<String> sincronizarBodegaItem(@PathVariable Long idItem, @PathVariable String codItem) throws SQLException {
         String idBodega = "";
         idBodega = unoEEServiceObj.obtenerBodegaItem(Integer.parseInt(codItem));
@@ -481,7 +481,7 @@ public class PedidoController {
 
 
     // Sincronizar precion ecuador (NO SE UTILIZARA POR EL MOMENTO)
-    @GetMapping("/sincronizar-precio-ecuador/{idItem}")
+    @GetMapping("/api/sincronizar-precio-ecuador/{idItem}")
     public List<String> sincronizarPrecioEcuador(@PathVariable Long idItem) {
         ItemPedido item = itemPedidoServiceObj.findById(idItem);
 
@@ -515,7 +515,7 @@ public class PedidoController {
 
 
     // Edicion del item pedido error
-    @PostMapping("/editar-item-pedido-error")
+    @PostMapping("/api/editar-item-pedido-error")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> editarItemPedidoError(@Valid @RequestBody ItemPedido itemPedido, BindingResult result){
         ItemPedido itemNuevo = null;
@@ -559,7 +559,7 @@ public class PedidoController {
 
 
     //Obtener el top 10 de items en el panel principal
-    @GetMapping("/recargar-consulta-items-unoee/{nit}/{sucursal}")
+    @GetMapping("/api/recargar-consulta-items-unoee/{nit}/{sucursal}")
     public List<ItemPedidoUnoEEController> recargarConsultaItemsPedidoUnoEE(@PathVariable String nit, @PathVariable String sucursal) throws SQLException {
         return unoEEServiceObj.recargarConsultarItemsPedidosUnoee(nit, sucursal);
     }

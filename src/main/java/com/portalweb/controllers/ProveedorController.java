@@ -9,16 +9,9 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.io.OutputStream;
-import java.net.URL;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
+
 
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -30,7 +23,7 @@ public class ProveedorController {
 
 
     // Obtener el row id del tercero
-    @GetMapping("/obtener-row-id-tercero/{nit}")
+    @GetMapping("/api/obtener-row-id-tercero/{nit}")
     public List<String> obtenerRowIdTercero(@PathVariable String nit) throws SQLException {
         List<String> resultado = new ArrayList<>();
 
@@ -45,13 +38,12 @@ public class ProveedorController {
     // RECORDAR CAMBIAR EL NIT Y EL ROW IDTERCERO
     // Crear el PDF despues de seleccionar PCI
     // "1000001792904285001"
-    @GetMapping("/crear-pdf-iva/{mesInicio}/{mesFin}/{anioGrabable}/{rowIdTercero}")
+    @GetMapping("/api/crear-pdf-iva/{mesInicio}/{mesFin}/{anioGrabable}/{rowIdTercero}")
     public ResponseEntity<?> crearPDFIva(@PathVariable String mesInicio, @PathVariable String mesFin,
                                          @PathVariable String anioGrabable,
                                          @PathVariable int rowIdTercero) throws SQLException {
 
         Map<String, Object> response = new HashMap<>();
-
         List<CertificadoRetencionIVA> listaCertificadoRetencionIVA = new ArrayList<>();
 
         int inicio = Integer.parseInt(mesInicio);
@@ -88,7 +80,7 @@ public class ProveedorController {
 
 
     //Generar pdf de retencion
-    @GetMapping("/crear-pdf-retencion/{anioGrabable}/{rowIdTercero}/{ciudadConsignoParam}/{ciudadPracticoParam}/{tipoCertificado}")
+    @GetMapping("/api/crear-pdf-retencion/{anioGrabable}/{rowIdTercero}/{ciudadConsignoParam}/{ciudadPracticoParam}/{tipoCertificado}")
     public ResponseEntity<?> crearPDFRetencion(@PathVariable String anioGrabable, @PathVariable int rowIdTercero,
                                                @PathVariable String ciudadConsignoParam, @PathVariable String ciudadPracticoParam,
                                                @PathVariable String tipoCertificado) throws SQLException {
